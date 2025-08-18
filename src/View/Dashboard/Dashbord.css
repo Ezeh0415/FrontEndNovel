@@ -1,0 +1,31 @@
+.animation-1 {
+  position: absolute;
+  animation: App-logo-spin-1 2s ease-in-out 1 normal;
+}
+
+.animation-2 {
+    position: absolute;
+    animation: App-logo-spin-2 2s ease-in-out 1 normal;
+}
+
+@media screen {
+  
+}
+
+@keyframes App-logo-spin-1 {
+  from {
+    margin-left: -250px;
+  }
+  to {
+    margin-left: 1px;
+  }
+}
+
+@keyframes App-logo-spin-2 {
+  from {
+    margin-left: 350px;
+  }
+  to {
+    margin-left: 1px;
+  }
+}
