@@ -87,7 +87,7 @@ const navItems = [
 
 export default function Header() {
   return (
-    <nav className="flex items-center justify-between px-4 py-2 text-white bg-gray-800 md:flex-col md:gap-y-16 md:justify-items-start ">
+    <nav className="flex items-center justify-between px-4 py-8 text-white bg-gray-800 md:flex-col md:gap-y-16 md:justify-items-start ">
       {navItems.map((item) => (
         <NavLink
           key={item.label}
