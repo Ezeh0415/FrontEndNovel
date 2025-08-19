@@ -68,7 +68,7 @@ const Dashboard = () => {
       </section>
 
       <section>
-        <div className="mt-4 md:mt-[-60px]">
+        <div className="mt-8 lg:mt-[-60px]">
           <h1 className="text-lg font-bold tracking-widest capitalize md:text-xl lg:text-2xl">
             last opened
           </h1>
