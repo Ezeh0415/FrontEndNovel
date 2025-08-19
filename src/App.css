@@ -38,10 +38,16 @@
 } */
 
 body {
-  background: 
-    radial-gradient(
-      circle 600px at 50% 50%, rgba(59,130,246,0.3), transparent
-    ), 
+  background: radial-gradient(
+      circle 600px at 50% 50%,
+      rgba(59, 130, 246, 0.3),
+      transparent
+    ),
     #000000;
-    /* height: 130vh; */
+  /* height: 130vh; */
+}
+
+.container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }

@@ -1,12 +1,13 @@
+import Footer from "../Header/Footer";
 import "./Dashbord.css";
 import { NavLink } from "react-router-dom";
 
 const Dashboard = () => {
   return (
-    <div>
-      <section>
+    <div className="mb-[2rem] md:mb-0">
+      <section className="lg:flex lg:items-center lg:justify-between">
         <div className="flex flex-col capitalize text-[40px] overflow-hidden mb-[8rem]">
-          <div className="flex items-center gap-2 animation-1">
+          <div className="flex items-center gap-2 sm:animation-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -24,8 +25,8 @@ const Dashboard = () => {
 
             <h1 className="tracking-widest">make your</h1>
           </div>
-          <div className="flex items-center gap-2 ml-7 animation-2 top-[9%] md:top-[6%]">
-            <h1 className="tracking-widest mt-[-13px]">e-bookshelf!</h1>
+          <div className="flex items-center gap-2 ml-7 sm:animation-2 top-[9%] md:top-[6%]">
+            <h1 className="tracking-widest mt-[-13px] ">e-bookshelf!</h1>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -42,7 +43,7 @@ const Dashboard = () => {
             </svg>
           </div>
         </div>
-        <div className="flex items-center capitalize text-[20px] justify-around  rounded-xl mt-[1rem] md:justify-end md:gap-5">
+        <div className="flex items-center capitalize text-[20px] justify-around  rounded-xl mt-[-100px] md:mt-[-100px] md:justify-end md:gap-5 lg:mr-[25px]">
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -67,19 +68,19 @@ const Dashboard = () => {
       </section>
 
       <section>
-        <div className="mt-4">
-          <h1 className="text-lg font-bold tracking-widest capitalize">
+        <div className="mt-4 md:mt-[-60px]">
+          <h1 className="text-lg font-bold tracking-widest capitalize md:text-xl lg:text-2xl">
             last opened
           </h1>
           <div className="mt-4">
-            <div className="w-[100px] h-[100px] rounded-xl">
+            <div className="w-[100px] h-[100px] rounded-xl md:w-[150px] md:h-[150px]">
               <div>
                 <img
                   src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8fHx8fHx8fHx8fDE2NjMwNjQxNzV8ZW58MHx8MHx8fHwxNjYwMjg4MzQ1fHx8ZW58MHx8fHw%3D&w=1000&q=80"
                   alt=""
-                  className="w-[100px] h-[100px] rounded-xl border-2"
+                  className="w-[100px] h-[100px] rounded-xl border-2 md:w-[150px] md:h-[150px]"
                 />
-                <h2 className="mt-1 text-sm text-center capitalize">
+                <h2 className="mt-1 text-sm text-center capitalize md:text-lg">
                   novel name
                 </h2>
               </div>
@@ -89,19 +90,19 @@ const Dashboard = () => {
       </section>
 
       <section>
-        <div className="mt-9">
-          <h1 className="text-lg font-bold tracking-widest capitalize">
+        <div className="mt-9 md:mt-14">
+          <h1 className="text-lg font-bold tracking-widest capitalize md:text-xl">
             favourite
           </h1>
           <div className="mt-4">
-            <div className="w-[100px] h-[100px] rounded-xl">
+            <div className="w-[100px] h-[100px] rounded-xl md:w-[150px] md:h-[150px]">
               <div>
                 <img
                   src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8fHx8fHx8fHx8fDE2NjMwNjQxNzV8ZW58MHx8MHx8fHwxNjYwMjg4MzQ1fHx8ZW58MHx8fHw%3D&w=1000&q=80"
                   alt=""
-                  className="w-[100px] h-[100px] rounded-xl border-2"
+                  className="w-[100px] h-[100px] rounded-xl border-2 md:w-[150px] md:h-[150px]"
                 />
-                <h2 className="mt-1 text-sm text-center capitalize">
+                <h2 className="mt-1 text-sm text-center capitalize md:text-lg">
                   novel name
                 </h2>
               </div>
@@ -111,19 +112,19 @@ const Dashboard = () => {
       </section>
 
       <section>
-        <div className="mt-9">
-          <h1 className="text-lg font-bold tracking-widest capitalize">
+        <div className="mt-9 md:mt-14">
+          <h1 className="text-lg font-bold tracking-widest capitalize md:text-xl">
             recomended
           </h1>
           <div className="mt-4">
-            <div className="w-[180px] h-[150px] rounded-xl">
+            <div className="w-[180px] h-[150px] rounded-xl md:w-[210px] md:h-[180px]">
               <div>
                 <img
                   src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8fHx8fHx8fHx8fDE2NjMwNjQxNzV8ZW58MHx8MHx8fHwxNjYwMjg4MzQ1fHx8ZW58MHx8fHw%3D&w=1000&q=80"
                   alt=""
-                  className="w-[100%] h-[150px] rounded-xl border-2"
+                  className="w-[100%] h-[150px] rounded-xl border-2 md:w-[210px] md:h-[180px]"
                 />
-                <h2 className="mt-1 text-sm text-center capitalize">
+                <h2 className="mt-1 text-sm text-center capitalize md:text-lg">
                   novel name
                 </h2>
               </div>
@@ -131,58 +132,7 @@ const Dashboard = () => {
           </div>
         </div>
       </section>
-
-      <section>
-        <div className="mt-10 mb-[5rem]">
-          <h2 className="text-xl tracking-wider text-center capitalize">
-            subscribe to get new novel update
-          </h2>
-          <div className="md:mt-4 md:items-center md:flex md:justify-evenly">
-            <div>
-              <form className="flex flex-col items-center justify-center">
-                <input
-                  type="text"
-                  placeholder="Enter your email"
-                  className="w-[300px] h-[40px] rounded-xl mt-4 border-2 border-[#000]"
-                />
-                <button className="px-4 py-1 mt-4 text-xl tracking-wider text-black capitalize border-2 rounded-xl bg-slate-200">
-                  subscribe
-                </button>
-              </form>
-            </div>
-            <div className="sm:hidden md:block">
-              <div className="max-w-sm mx-auto overflow-hidden text-white shadow-md rounded-xl md:max-w-md">
-                <div className="md:flex ">
-                  <div className="p-6">
-                    <div className="text-sm font-semibold tracking-wide text-yellow-500 uppercase">
-                      Subscribed
-                    </div>
-                    <h2 className="block mt-1 text-lg font-medium leading-tight">
-                      John Doe
-                    </h2>
-                    <p className="mt-2 text-gray-400">
-                      Subscribed to{" "}
-                      <span className="font-semibold text-yellow-500">
-                        free plan
-                      </span>
-                    </p>
-                    <p className="mt-1 text-sm text-gray-400">
-                      Since: August 2025
-                    </p>
-                    
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-                <p className="text-center text-lg text-[#fff] capitalize">
-                  by subscribing you agree to our{" "}
-                  <span className="text-[#fff]">terms and conditions</span>
-                </p>
-              </div>
-        </div>
-      </section>
+            <Footer />
     </div>
   );
 };

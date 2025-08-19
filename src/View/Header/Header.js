@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const navItems = [
   {
@@ -89,14 +89,19 @@ export default function Header() {
   return (
     <nav className="flex items-center justify-between px-4 py-2 text-white bg-gray-800 md:flex-col md:gap-y-16 md:justify-items-start ">
       {navItems.map((item) => (
-        <Link
+        <NavLink
           key={item.label}
           to={item.path}
-          className="flex flex-col items-center justify-center font-light capitalize "
+          className={({ isActive }) =>
+              isActive
+                ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500 "
+                :"flex flex-col items-center justify-center font-light capitalize "
+            }
+          
         >
           {item.icon}
           <p>{item.label}</p>
-        </Link>
+        </NavLink>
       ))}
     </nav>
   );

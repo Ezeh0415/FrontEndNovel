@@ -5,7 +5,7 @@ import Header from "./Header";
 const DesktopHeader = () => {
   return (
     <div>
-      <nav className="flex items-center justify-between md:flex-col md:gap-5 md:backdrop-blur-xl md:bg-gray-800 md:p-4">
+      <nav className="flex items-center justify-between md:flex-col md:gap-5 md:backdrop-blur-xl md:bg-gray-800 md:p-4 md:h-[99vh]">
         <div className="p-2 border-2 rounded-full w-fit">
           <Link to="/profile">
             <svg
