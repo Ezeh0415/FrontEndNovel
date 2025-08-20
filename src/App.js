@@ -26,7 +26,7 @@ function App() {
           <Route path="/search" element={<Search />} />
         </Routes>
       </div>
-        <div className="fixed w-[97%] top-[90vh] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden">
+        <div className="fixed w-[97%] top-[92vh] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden">
           <Header />
         </div>
     </div>
