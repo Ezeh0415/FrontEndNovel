@@ -8,10 +8,27 @@
     animation: App-logo-spin-2 2s ease-in-out 1 normal;
 }
 
-@media screen {
-  
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: fit-content;
+  font-size: 40px;
+  font-family: system-ui,sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #0000;
+  -webkit-text-stroke: 1px #000;
+  background: 
+    linear-gradient(-60deg,#ffff 45%,#b69f1f 0 55%,#ffff 0) 
+    0/300% 100% no-repeat text;
+  animation: l3 2s linear infinite;
+}
+.loader:before {
+  content: "Loading";
 }
 
+@keyframes l3 {
+  0%{background-position: 100%}
+}
 @keyframes App-logo-spin-1 {
   from {
     margin-left: -250px;

@@ -8,6 +8,8 @@ import AudioPlayer from "./View/Audio/Audio";
 import NovelForm from "./View/CreateNovel/CreateNovel";
 import Like from "./View/liked/Like";
 import Search from "./View/Search/Search";
+import Recomended from "./View/Dashboard/Recomended/Recomended";
+import NovelDetails from "./View/NovelDetails/NovelDetails";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/pen" element={<NovelForm />} />
           <Route path="/like" element={<Like />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/recomended" element={<Recomended />} />
+          <Route path="/NovelDetail" element={<NovelDetails />} />
         </Routes>
       </div>
         <div className="fixed w-[97%] top-[92vh] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden">

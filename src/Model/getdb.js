@@ -27,6 +27,32 @@ export const GetAllNovel = (url) => {
   return { Novel, loading, error };
 };
 
+export const GetSingleNovel = (url) => {
+  const [SingleNovel, setSingleNovel] = useState();
+  const [Singleloading, setSingleLoading] = useState(true);
+  const [Singleerror, setSingleError] = useState(null);
+
+  useEffect(() => {
+    if (!url) return;
+
+    setSingleLoading(true);
+    setSingleError(null);
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("Network error");
+        return res.json();
+      })
+      .then((data) => {
+        setSingleNovel(data.data); // <-- assign fetched data here
+      })
+      .catch((e) => setSingleError(e.message))
+      .finally(() => setSingleLoading(false));
+  }, [url]);
+
+  return { SingleNovel, Singleloading, Singleerror };
+};
+
 const jsonString = `
 {}`;
 
