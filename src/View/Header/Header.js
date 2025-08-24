@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import {  NavLink, useNavigate } from "react-router-dom";
+
 
 const navItems = [
   {
@@ -19,7 +20,7 @@ const navItems = [
         />
       </svg>
     ),
-    path: "/",
+    path: "/dashboard",
   },
   {
     label: "audio",
@@ -86,6 +87,7 @@ const navItems = [
 ];
 
 export default function Header() {
+  const Navigate = useNavigate();
   return (
     <nav className="flex items-center justify-evenly md:flex-col md:gap-y-16 md:justify-items-start md:mt-[-250px] lg:mt-[0px]">
       {/* flex items-center justify-between px-4 py-8 text-white bg-gray-800 md:flex-col md:gap-y-16 md:justify-items-start */}
@@ -94,11 +96,13 @@ export default function Header() {
           key={item.label}
           to={item.path}
           className={({ isActive }) =>
-              isActive
-                ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500 "
-                :"flex flex-col items-center justify-center font-light capitalize "
-            }
-          
+            isActive
+              ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500 "
+              : "flex flex-col items-center justify-center font-light capitalize "
+          }
+          // onClick={() => {localStorage.clear()
+          //   window.location = "/signup";
+          // }}
         >
           {item.icon}
           <p>{item.label}</p>

@@ -51,7 +51,7 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center capitalize text-[20px] justify-around  rounded-xl mt-[-100px] md:mt-[-100px] md:justify-end md:gap-5 lg:mr-[25px]">
             <NavLink
-              to="/"
+              to="/dashboard"
               className={({ isActive }) =>
                 isActive
                   ? "py-2 border-2 px-14 rounded-xl bg-white text-[#000]"
