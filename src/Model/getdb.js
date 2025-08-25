@@ -53,7 +53,17 @@ export const GetSingleNovel = (url) => {
   return { SingleNovel, Singleloading, Singleerror };
 };
 
-const jsonString = `
-{}`;
+export const HandleLogout = async (url) => {
+  try {
+    const res = await fetch(url, {
+      method: 'Get', 
+    });
+    if (!res.ok) throw new Error('Logout failed');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Logout API error:", error);
+    throw error;
+  }
+};
 
-export const novels = JSON.parse(jsonString);

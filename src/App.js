@@ -14,59 +14,124 @@ import OpenLoader from "./View/OpenLoader/OpenLoader";
 import { useMyContext } from "./Controller/DashbordContr/GetAllFile";
 import SignupPage from "./View/Auth/Signup/Signuup";
 import Login from "./View/Auth/Login/Login";
+import ProtectedRoute from "./View/Auth/Protected/ProtectedRoute";
+import { useEffect } from "react";
 
 function App() {
-  const { handleStart, openLoader, isAuthenticated } = useMyContext();
-  // const isAuthenticated = () => !!localStorage.getItem("token");
-  // console.log(openLoader);
+  const { handleStart, openLoader, isAuthenticated,userProfile } = useMyContext();
+  const auth = isAuthenticated();
+  
+  
+  useEffect(() => {
+    if (openLoader) {
+      handleStart(); 
 
-  // // A wrapper for protected routes
-  // function PrivateRoute({ children }) {
-  //   return isAuthenticated() ? children : <Navigate to="/login" />;
-  // }
+    }
+  }, [openLoader]);
   return (
-    <div >
-      {/* Your Content/Components */}
-      {openLoader ? (
-        <div onload={handleStart()}>
+    <div className="body">
+      <div className="text-[#fff] background relative md:grid md:grid-cols-7 md:gap-4">
+        {/* Show loader or routes */}
+        {openLoader ? (
           <Routes>
             <Route path="/" element={<OpenLoader />} />
           </Routes>
-        </div>
-      ) : (
-        <div>
-          {isAuthenticated() ? (
-            <div>
+        ) : (
+          <>
+            <div className={auth ? "col-span-1 mx-2 mt-2" : "hidden"}>
+              <DesktopHeader />
+            </div>
+
+            <div className="container z-10 mx-3 mb-[1rem] col-span-6 overflow-y-scroll md:mx-1 md:h-[99vh] w-[95%] md:w-[95%] lg:w-[99%]">
               <Routes>
+                {/* Public routes */}
                 <Route path="/" element={<Navigate to="/signup" />} />
-                <Route path="/signup" element={<SignupPage />} />
+                <Route
+                  path="/signup"
+                  element={auth ? <Navigate to="/dashboard" /> : <SignupPage />}
+                />
                 <Route path="/login" element={<Login />} />
+
+                {/* Protected routes */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/audio"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <AudioPlayer />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/pen"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <NovelForm />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/like"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <Like />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/search"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <Search />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/recomended"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <Recomended />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/NovelDetail"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth}>
+                      <NovelDetails />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </div>
-          ) : (
-            <div className="text-[#fff] background relative md:grid md:grid-cols-7 md:gap-4">
-              <div className="col-span-1 mx-2 mt-2">
-                <DesktopHeader />
-              </div>
-              <div className="container z-10 mx-3 mb-[1rem] col-span-6 overflow-y-scroll md:mx-1 md:h-[99vh] w-[95%] md:w-[95%] lg:w-[99%] ">
-                <Routes>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/audio" element={<AudioPlayer />} />
-                  <Route path="/pen" element={<NovelForm />} />
-                  <Route path="/like" element={<Like />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/recomended" element={<Recomended />} />
-                  <Route path="/NovelDetail" element={<NovelDetails />} />
-                </Routes>
-              </div>
-              <div className="fixed w-[97%] top-[92vh] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden">
-                <Header />
-              </div>
+
+            <div
+              className={
+                auth
+                  ? "fixed w-[97%] top-[92vh] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden"
+                  : "hidden"
+              }
+            >
+              <Header />
             </div>
-          )}
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

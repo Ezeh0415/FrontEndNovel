@@ -1,10 +1,41 @@
-import React from "react";
+import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
 
 export default function Profile() {
+  const {model,setModel,Logout} = useMyContext();
+  const userProfile = localStorage.getItem("user");
+  const user = JSON.parse(userProfile);
+  
+
   return (
-    <div className="max-w-4xl p-6 mx-auto space-y-6 text-white rounded-lg shadow-md">
+    <div className="max-w-4xl p-6 mx-auto space-y-6 text-white rounded-lg shadow-md relative">
       {/* User Info Header */}
       <div className="flex items-center space-x-4">
+        <div className={model ? "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" : "hidden fixed inset-0 z-50  items-center justify-center bg-black bg-opacity-50"}>
+          <div className="w-[90%] max-w-md bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg">
+            <h2 className="text-lg font-semibold text-white mb-4">
+              Confirm Logout
+            </h2>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to log out?
+            </p>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 rounded hover:bg-gray-600 transition"
+                onClick={() => setModel(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition"
+                onClick={Logout}
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+
         <img
           src="https://randomuser.me/api/portraits/women/44.jpg"
           alt="Profile"
@@ -12,7 +43,9 @@ export default function Profile() {
         />
 
         <div>
-          <h2 className="text-2xl font-semibold">ReaderUsername</h2>
+          <h2 className="text-2xl font-semibold capitalize">
+            {user.firstName} {user.lastName}
+          </h2>
           <p className="text-gray-300">Joined Jan 2024 · Level 0</p>
         </div>
       </div>
@@ -36,18 +69,6 @@ export default function Profile() {
           <li>Review Posted: 45</li>
         </ul>
       </section>
-
-      {/* Activity Feed */}
-      {/* <section>
-        <h3 className="mb-2 text-xl font-semibold">🔔 Recent Activity</h3>
-        <ul className="space-y-1 text-gray-700 list-disc list-inside">
-          <li>Commented on “The Mage’s Tower” 2h ago</li>
-          <li>Rated “Apocalypse Queen” 4.5⭐ 1d ago</li>
-          <li>Posted in “Best Villain MCs?” forum 3d ago</li>
-        </ul>
-      </section> */}
-
-      {/* User Status */}
       <section>
         <h3 className="mb-2 text-xl font-semibold">🏅 Achievements</h3>
         <div className="flex flex-wrap gap-2">
@@ -68,10 +89,18 @@ export default function Profile() {
 
       <section>
         <div className="mb-[4rem]">
-          <h1 className="p-2 text-black capitalize bg-yellow-300 rounded-lg w-fit">logout</h1>
+          <h1 className="p-2 text-black capitalize bg-yellow-300 rounded-lg w-fit"
+           onClick={() => setModel(true)}
+          >
+            logout
+          </h1>
           <div className="mt-3">
-            <h2 className="text-red-500 capitalize">you are about delete your account </h2>
-            <h1 className="p-2 mt-2 text-red-200 capitalize bg-red-800 rounded-lg">delete account</h1>
+            <h2 className="text-red-500 capitalize">
+              you are about delete your account{" "}
+            </h2>
+            <h1 className="p-2 mt-2 text-red-200 capitalize bg-red-800 rounded-lg">
+              delete account
+            </h1>
           </div>
         </div>
       </section>

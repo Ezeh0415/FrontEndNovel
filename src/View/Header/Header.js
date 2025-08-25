@@ -1,5 +1,4 @@
-import {  NavLink, useNavigate } from "react-router-dom";
-
+import { NavLink, useNavigate } from "react-router-dom";
 
 const navItems = [
   {
@@ -100,9 +99,10 @@ export default function Header() {
               ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500 "
               : "flex flex-col items-center justify-center font-light capitalize "
           }
-          // onClick={() => {localStorage.clear()
-          //   window.location = "/signup";
-          // }}
+          onClick={() => {
+            localStorage.getItem("user");
+            // window.location = "/signup"
+          }}
         >
           {item.icon}
           <p>{item.label}</p>

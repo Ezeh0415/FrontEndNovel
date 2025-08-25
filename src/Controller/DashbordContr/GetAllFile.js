@@ -1,66 +1,66 @@
-import React, { createContext, useState, useContext } from "react";
-import { GetAllNovel, GetSingleNovel } from "../../Model/getdb";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { GetAllNovel, GetSingleNovel, HandleLogout } from "../../Model/getdb";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../Model/postdb";
+import { login, signup } from "../../Model/postdb";
 import localStorage from "localStorage";
 
-// 1. Create the context
+// 1. Create the context for global state
 const MyContext = createContext();
+const Base_Url = "https://backendnovel-production.up.railway.app/";
 
-// 2. Create the provider
+// 2. Create the provider component
 export const MyProvider = ({ children }) => {
-  // Call the hook inside the component
-  const { Novel, loading, error } = GetAllNovel(
-    "https://backendnovel-production.up.railway.app/books"
-  );
+  // Fetch all novels from backend
+  const { Novel, loading, error } = GetAllNovel(`${Base_Url}books`);
 
+  // State for single novel selection
   const [singleNovel, setSingleNovel] = useState(null);
+  // Function to set selected novel ID
   const handdleGetSingleNovel = (id) => {
     setSingleNovel(id);
   };
 
+  // Fetch details for a single novel
   const { SingleNovel, Singleloading, Singleerror } = GetSingleNovel(
-    `https://backendnovel-production.up.railway.app/books/${singleNovel}`
+    `${Base_Url}books/${singleNovel}`
   );
 
-  // open loader page
+  // Loader state and function to start loader
   const [openLoader, setopenLoader] = useState(true);
   const handleStart = () => {
     setTimeout(() => {
       setopenLoader(false);
-    }, 8000);
+    }, 8000); // Loader stays open for 8 seconds
   };
 
- 
-
-  // |||| authenticate section ||||
-  // sign up section
-  const [username, setUsername] = useState("");
+  // Authentication and signup state
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [userProfile, setUserProfile] = useState("");
   const [btnLoading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Simple email validation function
   const validateEmail = (email) => {
-    // Simple regex for basic email validation
     return /\S+@\S+\.\S+/.test(email);
   };
 
+  // Signup form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!username || !email || !password) {
+    // Basic input validation
+    if (!firstName || !lastName || !email || !password) {
       setMessage("All fields are required.");
       return;
     }
-
     if (!validateEmail(email)) {
       setMessage("Please enter a valid email.");
       return;
     }
-
     if (password.length < 6) {
       setMessage("Password must be at least 6 characters.");
       return;
@@ -70,7 +70,8 @@ export const MyProvider = ({ children }) => {
     setMessage(""); // Clear any previous message
 
     try {
-      const result = await signup(username, password, email);
+      // Call signup API
+      const result = await signup(firstName, lastName, password, email);
 
       console.log("Signup result:", result);
       if (!result) {
@@ -79,21 +80,24 @@ export const MyProvider = ({ children }) => {
       }
 
       if (result.ok) {
+        // Store token and user profile on successful signup
         const token = result.data.accessToken;
+        setUserProfile(result.data.user);
         if (token) {
           localStorage.setItem("jwtToken", token);
         }
 
         setMessage("Signup successful!");
-        setUsername("");
+        setfirstName("");
+        setlastName("");
         setEmail("");
         setPassword("");
 
-        // Navigate after short delay to show success message
+        // Navigate to dashboard after short delay
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
+        // Show error message from backend
         setMessage(result.errorMessage || "Signup failed. Please try again.");
-        // Keep inputs so user can correct without retyping all
       }
     } catch (err) {
       setMessage("Unexpected error. Please try again.");
@@ -104,10 +108,91 @@ export const MyProvider = ({ children }) => {
     }
   };
 
-   const isAuthenticated = () => {
-    return localStorage.getItem("jwtToken") ? false : true;
+  // Store user profile in localStorage whenever it changes
+  useEffect(() => {
+    if (userProfile) {
+      localStorage.setItem("user", JSON.stringify(userProfile));
+    }
+  }, [userProfile]);
+
+  // Check if user is authenticated (token exists)
+  const isAuthenticated = () => {
+    return localStorage.getItem("jwtToken") ? true : false;
   };
 
+  // login function
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setMessage("All fields are required.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setMessage("Please enter a valid email.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
+    try {
+      // Call signup API
+      const result = await login(password, email);
+
+      console.log("Signup result:", result);
+      if (!result) {
+        console.error("Signup returned undefined!");
+        return;
+      }
+
+      if (result.ok) {
+        // Store token and user profile on successful signup
+        const token = result.data.accessToken;
+        setUserProfile(result.data.user);
+        if (token) {
+          localStorage.setItem("jwtToken", token);
+        }
+
+        setMessage("Signup successful!");
+        setEmail("");
+        setPassword("");
+
+        // Navigate to dashboard after short delay
+        setTimeout(() => navigate("/dashboard"), 1000);
+      } else {
+        // Show error message from backend
+        setMessage(result.errorMessage || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      setMessage("Unexpected error. Please try again.");
+    } finally {
+      setEmail("");
+      setPassword("");
+      setLoading(false);
+      // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  // logout function
+  const [model, setModel] = useState(false);
+  const Logout = async () => {
+    console.log("Logout started");
+    try {
+      localStorage.removeItem("jwtToken");
+      localStorage.removeItem("user");
+
+      await HandleLogout(`${Base_Url}logout`);
+
+      console.log("Logout successful, redirecting...");
+      navigate("/login"); // or use navigate("/login")
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  // Provide all state and functions to children via context
   return (
     <MyContext.Provider
       value={{
@@ -120,15 +205,22 @@ export const MyProvider = ({ children }) => {
         handleStart,
         openLoader,
         isAuthenticated,
-        username,
+        firstName,
+        lastName,
         email,
         password,
         message,
         handleSubmit,
-        setUsername,
+        setfirstName,
+        setlastName,
         setEmail,
         setPassword,
         btnLoading,
+        userProfile,
+        handleLogin,
+        model,
+        setModel,
+        Logout,
       }}
     >
       {children}
@@ -136,5 +228,5 @@ export const MyProvider = ({ children }) => {
   );
 };
 
-// 3. Optional: Create a custom hook
+// 3. Custom hook to use context easily
 export const useMyContext = () => useContext(MyContext);

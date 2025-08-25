@@ -1,7 +1,6 @@
 import Footer from "../Header/Footer";
 import "./Dashbord.css";
 import { Link, NavLink } from "react-router-dom";
-import { novels } from "../../Model/getdb";
 import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
 
 const Dashboard = () => {
@@ -74,7 +73,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section>
+        {/* <section>
           {novels ? (
             <div className="hidden">empty</div>
           ) : (
@@ -206,7 +205,7 @@ const Dashboard = () => {
               )}
             </div>
           )}
-        </section>
+        </section> */}
 
         <section>
           <div className="mt-9 md:mt-14">
