@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
 import { Link } from "react-router-dom";
 
 export default function NovelDetails() {
-  const { SingleNovel, Singleloading } = useMyContext();
+  const {
+    SingleNovel,
+    Singleloading,
+    review,
+    reviewLoading,
+    reviewError,
+    reviewMessage,
+    setReview,
+    handleSubmitReview,
+  } = useMyContext();
+  console.log(SingleNovel);
 
   return (
-    <div className="max-w-5xl px-4 py-8 mx-auto text-white">
+    <div className="max-w-5xl px-4 py-8 mx-auto text-white capitalize">
       {/* Container */}
       <div className="p-6 space-y-6 rounded-lg shadow-md">
         {/* Header Section */}
@@ -117,7 +127,7 @@ export default function NovelDetails() {
                     >
                       <p>
                         <span className="font-semibold text-white">
-                          {review.user}:
+                          {review.reviewer}:
                         </span>{" "}
                         {review.comment}
                       </p>
@@ -128,25 +138,14 @@ export default function NovelDetails() {
 
               {/* Review Form */}
               <section className="mt-10">
+                {reviewError && (
+                  <p className="text-red-500 text-center">{reviewMessage}</p>
+                )}
+
                 <div className="p-6 space-y-6 bg-gray-900 rounded-lg shadow-md">
                   <h2 className="text-xl font-semibold">📝 Leave a Review</h2>
 
-                  <form className="space-y-5">
-                    <div>
-                      <label
-                        className="block mb-1 text-sm text-gray-300"
-                        htmlFor="name"
-                      >
-                        Your Name
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        placeholder="Enter your name"
-                        className="w-full px-4 py-2 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                      />
-                    </div>
-
+                  <form className="space-y-5" onSubmit={handleSubmitReview}>
                     <div>
                       <label
                         className="block mb-1 text-sm text-gray-300"
@@ -157,18 +156,29 @@ export default function NovelDetails() {
                       <textarea
                         id="review"
                         placeholder="Write your review..."
+                        value={review}
+                        onChange={(e) => setReview(e.target.value)}
                         rows={4}
                         className="w-full px-4 py-2 text-black rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       ></textarea>
                     </div>
 
-                    <button
+                    {reviewLoading ? (
+                      <div className="mx-auto w-fit">
+                        <div class="loader"></div>
+                      </div>
+                    ) : (
+                      <div>
+                        <button
                       type="submit"
                       onClick={() => console.log(SingleNovel._id)}
                       className="px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400"
                     >
                       Submit Review
                     </button>
+                      </div>
+                    )}
+                    
                   </form>
                 </div>
               </section>

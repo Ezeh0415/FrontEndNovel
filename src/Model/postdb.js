@@ -34,7 +34,7 @@ export const signup = async (firstName, lastName, password, email) => {
     });
 };
 
-export const login = async ( password, email) => {
+export const login = async (password, email) => {
   return fetch(`${Base_Url}/login`, {
     method: "POST",
     headers: {
@@ -43,6 +43,39 @@ export const login = async ( password, email) => {
     body: JSON.stringify({
       email: email,
       password: password,
+    }),
+  })
+    .then((response) => {
+      // Check if response is OK (status 2xx)
+      if (!response.ok) {
+        // If not OK, parse error message and throw to jump to catch
+        return response.json().then((errorData) => {
+          // Throw an error with the message from backend or default
+          throw new Error(errorData.message || "Signup failed");
+        });
+      }
+      // If OK, parse the response body
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+      // console.log("Signup successful:", data);
+    })
+    .catch((error) => {
+      // Handle errors here
+      return { ok: false, errorMessage: error.message };
+    });
+};
+
+export const handleReview = async (review, usersLastName, singleNovel) => {
+  return fetch(`${Base_Url}/books/reviews/${singleNovel}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      reviewer: usersLastName,
+      comment: review
     }),
   })
     .then((response) => {

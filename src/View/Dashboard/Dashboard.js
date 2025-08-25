@@ -2,10 +2,10 @@ import Footer from "../Header/Footer";
 import "./Dashbord.css";
 import { Link, NavLink } from "react-router-dom";
 import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
+import LazyImage from "../../utils/LazyImage";
 
 const Dashboard = () => {
-  const { Novel, loading, error, handdleGetSingleNovel } =
-    useMyContext();
+  const { Novel, loading, error, handdleGetSingleNovel } = useMyContext();
 
   return (
     <div>
@@ -238,8 +238,8 @@ const Dashboard = () => {
                           to="/NovelDetail"
                         >
                           <div>
-                            <img
-                              src={singleNovel.image_url} // Replace with your actual image path or use Unsplash as fallback
+                            <LazyImage
+                              src={singleNovel.image_url}
                               alt={singleNovel.title}
                               className="w-full h-[150px] md:h-[180px] rounded-xl border-2 object-cover"
                             />

@@ -5,6 +5,7 @@ export default function Profile() {
   const userProfile = localStorage.getItem("user");
   const user = JSON.parse(userProfile);
   
+  
 
   return (
     <div className="max-w-4xl p-6 mx-auto space-y-6 text-white rounded-lg shadow-md relative">

@@ -1,7 +1,7 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, use } from "react";
 import { GetAllNovel, GetSingleNovel, HandleLogout } from "../../Model/getdb";
 import { useNavigate } from "react-router-dom";
-import { login, signup } from "../../Model/postdb";
+import { handleReview, login, signup } from "../../Model/postdb";
 import localStorage from "localStorage";
 
 // 1. Create the context for global state
@@ -15,6 +15,7 @@ export const MyProvider = ({ children }) => {
 
   // State for single novel selection
   const [singleNovel, setSingleNovel] = useState(null);
+
   // Function to set selected novel ID
   const handdleGetSingleNovel = (id) => {
     setSingleNovel(id);
@@ -39,7 +40,6 @@ export const MyProvider = ({ children }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [userProfile, setUserProfile] = useState("");
   const [btnLoading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -82,9 +82,14 @@ export const MyProvider = ({ children }) => {
       if (result.ok) {
         // Store token and user profile on successful signup
         const token = result.data.accessToken;
-        setUserProfile(result.data.user);
+        const User = result.data.user;
+
+        if (User) {
+          localStorage.setItem("user", JSON.stringify(User)); // ✅ stringify the object
+        }
+
         if (token) {
-          localStorage.setItem("jwtToken", token);
+          localStorage.setItem("jwtToken", token); // ✅ this is already a string
         }
 
         setMessage("Signup successful!");
@@ -108,21 +113,15 @@ export const MyProvider = ({ children }) => {
     }
   };
 
-  // Store user profile in localStorage whenever it changes
-  useEffect(() => {
-    if (userProfile) {
-      localStorage.setItem("user", JSON.stringify(userProfile));
-    }
-  }, [userProfile]);
-
   // Check if user is authenticated (token exists)
   const isAuthenticated = () => {
     return localStorage.getItem("jwtToken") ? true : false;
   };
 
-  // login function
+  // Login function
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!email || !password) {
       setMessage("All fields are required.");
       return;
@@ -137,24 +136,29 @@ export const MyProvider = ({ children }) => {
     setMessage("");
 
     try {
-      // Call signup API
+      // Call login API
       const result = await login(password, email);
 
-      console.log("Signup result:", result);
+      console.log("Login result:", result);
       if (!result) {
-        console.error("Signup returned undefined!");
+        console.error("Login returned undefined!");
         return;
       }
 
       if (result.ok) {
-        // Store token and user profile on successful signup
+        // Store token and user profile on successful login
         const token = result.data.accessToken;
-        setUserProfile(result.data.user);
-        if (token) {
-          localStorage.setItem("jwtToken", token);
+        const User = result.data.user;
+
+        if (User) {
+          localStorage.setItem("user", JSON.stringify(User)); // ✅ stringify the object
         }
 
-        setMessage("Signup successful!");
+        if (token) {
+          localStorage.setItem("jwtToken", token); // ✅ this is already a string
+        }
+
+        setMessage("Login successful!");
         setEmail("");
         setPassword("");
 
@@ -162,7 +166,7 @@ export const MyProvider = ({ children }) => {
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
         // Show error message from backend
-        setMessage(result.errorMessage || "Signup failed. Please try again.");
+        setMessage(result.errorMessage || "Login failed. Please try again.");
       }
     } catch (err) {
       setMessage("Unexpected error. Please try again.");
@@ -175,20 +179,60 @@ export const MyProvider = ({ children }) => {
     }
   };
 
-  // logout function
+  // Logout function
   const [model, setModel] = useState(false);
   const Logout = async () => {
     console.log("Logout started");
+
     try {
       localStorage.removeItem("jwtToken");
       localStorage.removeItem("user");
-
+      setModel(false);
       await HandleLogout(`${Base_Url}logout`);
 
       console.log("Logout successful, redirecting...");
-      navigate("/login"); // or use navigate("/login")
+      navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
+    }
+  };
+
+  // Review section
+  const [review, setReview] = useState("");
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState(false);
+  const [reviewMessage, setReviewMessage] = useState("");
+  const Users = localStorage.getItem("user");
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    const usersLastName = JSON.parse(Users).lastName;
+    if (!review || !usersLastName) {
+      setReviewError(true);
+      setReviewMessage("All fields are required.");
+      return;
+    }
+
+    setReviewLoading(true);
+    setReviewMessage("");
+
+    try {
+      const result = await handleReview(review, usersLastName, singleNovel);
+      console.log("Review result:", result);
+
+      if (!result) {
+        console.error("Review returned undefined!");
+        return;
+      }
+
+      if (result.ok) {
+        setReviewMessage("Review submitted successfully!");
+        setReview("");
+      }
+    } catch (error) {
+      setReviewError(error.errorMessage);
+    } finally {
+      setReviewLoading(false);
     }
   };
 
@@ -216,11 +260,16 @@ export const MyProvider = ({ children }) => {
         setEmail,
         setPassword,
         btnLoading,
-        userProfile,
         handleLogin,
         model,
         setModel,
         Logout,
+        review,
+        reviewLoading,
+        reviewError,
+        reviewMessage,
+        setReview,
+        handleSubmitReview,
       }}
     >
       {children}

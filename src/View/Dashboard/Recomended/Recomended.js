@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useMyContext } from "../../../Controller/DashbordContr/GetAllFile";
+import LazyImage from "../../../utils/LazyImage";
 
 const Recomended = () => {
-  const { Novel, loading, error,handdleGetSingleNovel } = useMyContext();
+  const { Novel, loading, error, handdleGetSingleNovel } = useMyContext();
   return (
     <div>
       <div className="flex items-center justify-between mt-5">
@@ -45,15 +46,15 @@ const Recomended = () => {
                   key={singleNovel._id}
                   className="min-w-[160px] min-h-[220px] rounded-xl md:min-w-[210px] md:min-h-[250px]"
                 >
-                   <Link
-                          onClick={() => handdleGetSingleNovel(singleNovel._id)}
-                          to="/NovelDetail"
-                        >
+                  <Link
+                    onClick={() => handdleGetSingleNovel(singleNovel._id)}
+                    to="/NovelDetail"
+                  >
                     <div>
-                      <img
-                        src={singleNovel.image_url} // Replace with your actual image path or use Unsplash as fallback
+                      <LazyImage
+                        src={singleNovel.image_url}
                         alt={singleNovel.title}
-                        className="w-full h-[150px] md:h-[180px] rounded-xl  object-cover"
+                        className="w-full h-[150px] md:h-[180px] rounded-xl border-2 object-cover"
                       />
                       <h2 className="mt-2 text-sm font-semibold text-center capitalize md:text-base">
                         {singleNovel.title}
