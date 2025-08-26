@@ -1,8 +1,8 @@
-// 1. Generic fetch hook
 import { useState, useEffect } from "react";
 
+// Fetch all novels
 export const GetAllNovel = (url) => {
-  const [Novel, setNovel] = useState(); // store fetched novels here
+  const [Novel, setNovel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,7 +18,7 @@ export const GetAllNovel = (url) => {
         return res.json();
       })
       .then((data) => {
-        setNovel(data.data); // <-- assign fetched data here
+        setNovel(data.data); // Assign fetched data
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -27,8 +27,9 @@ export const GetAllNovel = (url) => {
   return { Novel, loading, error };
 };
 
+// Fetch a single novel
 export const GetSingleNovel = (url) => {
-  const [SingleNovel, setSingleNovel] = useState();
+  const [SingleNovel, setSingleNovel] = useState(null);
   const [Singleloading, setSingleLoading] = useState(true);
   const [Singleerror, setSingleError] = useState(null);
 
@@ -44,7 +45,7 @@ export const GetSingleNovel = (url) => {
         return res.json();
       })
       .then((data) => {
-        setSingleNovel(data.data); // <-- assign fetched data here
+        setSingleNovel(data.data); // Assign fetched data
       })
       .catch((e) => setSingleError(e.message))
       .finally(() => setSingleLoading(false));
@@ -53,12 +54,13 @@ export const GetSingleNovel = (url) => {
   return { SingleNovel, Singleloading, Singleerror };
 };
 
+// Logout handler
 export const HandleLogout = async (url) => {
   try {
     const res = await fetch(url, {
-      method: 'Get', 
+      method: "GET", // Correct HTTP method
     });
-    if (!res.ok) throw new Error('Logout failed');
+    if (!res.ok) throw new Error("Logout failed");
     const data = await res.json();
     return data;
   } catch (error) {
@@ -67,3 +69,29 @@ export const HandleLogout = async (url) => {
   }
 };
 
+// Fetch liked novels
+export const LikedNovel = (url) => {
+  const [liked, setLiked] = useState(null);
+  const [LikedLoading, setLikedLoading] = useState(true);
+  const [LikedError, setLikedError] = useState(null);
+
+  useEffect(() => {
+    if (!url) return;
+
+    setLikedLoading(true);
+    setLikedError(null);
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("Network error");
+        return res.json();
+      })
+      .then((data) => {
+        setLiked(data.data); // Assign fetched data
+      })
+      .catch((e) => setLikedError(e.message))
+      .finally(() => setLikedLoading(false));
+  }, [url]);
+
+  return { liked, LikedLoading, LikedError };
+};

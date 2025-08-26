@@ -1,7 +1,12 @@
-import React, { createContext, useState, useContext, use } from "react";
-import { GetAllNovel, GetSingleNovel, HandleLogout } from "../../Model/getdb";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import {
+  GetAllNovel,
+  GetSingleNovel,
+  HandleLogout,
+  LikedNovel,
+} from "../../Model/getdb";
 import { useNavigate } from "react-router-dom";
-import { handleReview, login, signup } from "../../Model/postdb";
+import { handleLiked, handleReview, login, signup } from "../../Model/postdb";
 import localStorage from "localStorage";
 
 // 1. Create the context for global state
@@ -10,6 +15,8 @@ const Base_Url = "https://backendnovel-production.up.railway.app/";
 
 // 2. Create the provider component
 export const MyProvider = ({ children }) => {
+   const navigate = useNavigate();
+
   // Fetch all novels from backend
   const { Novel, loading, error } = GetAllNovel(`${Base_Url}books`);
 
@@ -18,13 +25,107 @@ export const MyProvider = ({ children }) => {
 
   // Function to set selected novel ID
   const handdleGetSingleNovel = (id) => {
-    setSingleNovel(id);
+    localStorage.setItem("singleFileId", id);
+    setSingleNovel(id); // Also update state directly
   };
 
-  // Fetch details for a single novel
+  // On component mount, load the saved ID
+  useEffect(() => {
+    const storedId = localStorage.getItem("singleFileId");
+    if (storedId) {
+      setSingleNovel(storedId);
+    }
+  }, []); // run only on first render
+
+  // Now fetch the novel when singleNovel is set
   const { SingleNovel, Singleloading, Singleerror } = GetSingleNovel(
-    `${Base_Url}books/${singleNovel}`
+    singleNovel ? `${Base_Url}books/${singleNovel}` : null
   );
+
+  const [likedLoading, setLikedLoading] = useState(false);
+  const [likedError, setLikedError] = useState(false);
+  const [LikedMessage, setLikedMessage] = useState("");
+  // liked section version
+  const handleSaveLiked = async () => {
+    const likedUser = localStorage.getItem("user");
+    const userId = likedUser ? JSON.parse(likedUser).id : null;
+
+    if (!userId) {
+      setLikedError(true);
+      setLikedMessage("User not logged in");
+      return;
+    }
+
+    const {
+      _id,
+      genres,
+      author,
+      image_url,
+      novel_pages_url,
+      pages,
+      rating,
+      reviews,
+      title,
+    } = SingleNovel;
+
+    if (
+      !_id ||
+      !genres ||
+      !author ||
+      !image_url ||
+      !novel_pages_url ||
+      !pages ||
+      !rating ||
+      !reviews ||
+      !title
+    ) {
+      setLikedError(true);
+      setLikedMessage("Something went wrong while saving");
+      return;
+    }
+
+    setLikedLoading(true);
+    setLikedMessage("");
+
+    try {
+      const result = await handleLiked(
+        _id,
+        genres,
+        author,
+        image_url,
+        novel_pages_url,
+        pages,
+        rating,
+        reviews,
+        title,
+        userId
+      );
+
+      if (!result) {
+        setLikedError(true);
+        setLikedMessage("Like result undefined/null");
+        return;
+      }
+
+      if (result.ok) {
+        setLikedError(false);
+        setLikedMessage("novel Saving is successful");
+        window.location = "/dashboard";
+      } else {
+        setLikedError(true);
+        setLikedMessage(
+          result.errorMessage || "Saving failed, please try again."
+        );
+      }
+    } catch (error) {
+      setLikedError(true);
+      setLikedMessage("Saving failed, please try again.");
+    } finally {
+      setLikedLoading(false);
+      setLikedError(false);
+      setTimeout(() => setLikedMessage(""), 3000);
+    }
+  };
 
   // Loader state and function to start loader
   const [openLoader, setopenLoader] = useState(true);
@@ -41,8 +142,7 @@ export const MyProvider = ({ children }) => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [btnLoading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
+ 
   // Simple email validation function
   const validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -197,6 +297,12 @@ export const MyProvider = ({ children }) => {
     }
   };
 
+  // Liked section
+
+  const { liked, LikedLoading, LikedError } = LikedNovel(
+    `${Base_Url}novelLiked`
+  );
+
   // Review section
   const [review, setReview] = useState("");
   const [reviewLoading, setReviewLoading] = useState(false);
@@ -228,6 +334,7 @@ export const MyProvider = ({ children }) => {
       if (result.ok) {
         setReviewMessage("Review submitted successfully!");
         setReview("");
+        navigate(0);
       }
     } catch (error) {
       setReviewError(error.errorMessage);
@@ -270,6 +377,13 @@ export const MyProvider = ({ children }) => {
         reviewMessage,
         setReview,
         handleSubmitReview,
+        handleSaveLiked,
+        LikedMessage,
+        likedError,
+        likedLoading,
+        liked,
+        LikedLoading,
+        LikedError,
       }}
     >
       {children}

@@ -99,10 +99,6 @@ export default function Header() {
               ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500 "
               : "flex flex-col items-center justify-center font-light capitalize "
           }
-          onClick={() => {
-            localStorage.getItem("user");
-            // window.location = "/signup"
-          }}
         >
           {item.icon}
           <p>{item.label}</p>

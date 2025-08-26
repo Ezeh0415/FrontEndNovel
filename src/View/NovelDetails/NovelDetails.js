@@ -12,8 +12,11 @@ export default function NovelDetails() {
     reviewMessage,
     setReview,
     handleSubmitReview,
+    handleSaveLiked,
+    LikedMessage,
+    likedError,
+    likedLoading,
   } = useMyContext();
-  console.log(SingleNovel);
 
   return (
     <div className="max-w-5xl px-4 py-8 mx-auto text-white capitalize">
@@ -96,22 +99,46 @@ export default function NovelDetails() {
                     >
                       Read Now
                     </a>
-                    <button className="p-2 text-red-500 transition rounded-full hover:bg-red-800/30">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-8 h-8"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                        />
-                      </svg>
-                    </button>
+                    <h1 className="text-center text-green-700 capitalize">
+                      {LikedMessage}
+                    </h1>
+                    {likedLoading ? (
+                      <div className="w-fit mx-auto">
+                        <div class="loader"></div>
+                      </div>
+                    ) : (
+                      <div>
+                        {likedError ? (
+                          <div>
+                            <h2 className="text-center text-red-600">
+                              {LikedMessage}
+                            </h2>
+                          </div>
+                        ) : (
+                          <div>
+                            <button
+                              className="p-2 text-red-500 transition rounded-full hover:bg-red-800/30"
+                              onClick={handleSaveLiked}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-8 h-8"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -170,15 +197,14 @@ export default function NovelDetails() {
                     ) : (
                       <div>
                         <button
-                      type="submit"
-                      onClick={() => console.log(SingleNovel._id)}
-                      className="px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400"
-                    >
-                      Submit Review
-                    </button>
+                          type="submit"
+                          onClick={() => console.log(SingleNovel._id)}
+                          className="px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400"
+                        >
+                          Submit Review
+                        </button>
                       </div>
                     )}
-                    
                   </form>
                 </div>
               </section>

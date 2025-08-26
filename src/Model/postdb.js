@@ -75,7 +75,7 @@ export const handleReview = async (review, usersLastName, singleNovel) => {
     },
     body: JSON.stringify({
       reviewer: usersLastName,
-      comment: review
+      comment: review,
     }),
   })
     .then((response) => {
@@ -85,6 +85,57 @@ export const handleReview = async (review, usersLastName, singleNovel) => {
         return response.json().then((errorData) => {
           // Throw an error with the message from backend or default
           throw new Error(errorData.message || "Signup failed");
+        });
+      }
+      // If OK, parse the response body
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+      // console.log("Signup successful:", data);
+    })
+    .catch((error) => {
+      // Handle errors here
+      return { ok: false, errorMessage: error.message };
+    });
+};
+
+export const handleLiked = async (
+  _id,
+  genres,
+  author,
+  image_url,
+  novel_pages_url,
+  pages,
+  rating,
+  reviews,
+  title,
+  userId
+) => {
+  return fetch(`${Base_Url}/books/liked/${userId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: _id,
+      author: author,
+      genres: genres,
+      image_url: image_url,
+      novel_pages_url: novel_pages_url,
+      pages: pages,
+      rating: rating,
+      reviews: reviews,
+      title: title,
+    }),
+  })
+    .then((response) => {
+      // Check if response is OK (status 2xx)
+      if (!response.ok) {
+        // If not OK, parse error message and throw to jump to catch
+        return response.json().then((errorData) => {
+          // Throw an error with the message from backend or default
+          throw new Error(errorData.message);
         });
       }
       // If OK, parse the response body

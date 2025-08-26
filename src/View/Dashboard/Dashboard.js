@@ -5,7 +5,16 @@ import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
 import LazyImage from "../../utils/LazyImage";
 
 const Dashboard = () => {
-  const { Novel, loading, error, handdleGetSingleNovel } = useMyContext();
+  const {
+    Novel,
+    loading,
+    error,
+    handdleGetSingleNovel,
+    liked,
+    LikedLoading,
+    LikedError,
+  } = useMyContext();
+  console.log(liked);
 
   return (
     <div>
@@ -138,74 +147,89 @@ const Dashboard = () => {
               )}
             </div>
           )}
-        </section>
+        </section> */}
 
         <section>
-          {novels ? (
-            <div className="hidden">empty</div>
-          ) : (
-            <div className="mt-8 lg:mt-[-60px] ">
-              <div className="flex items-center justify-between">
-                <h1 className="text-lg font-bold tracking-widest capitalize md:text-xl">
-                  last open
-                </h1>
-                <Link className="mr-3 capitalize" to="/recomended">
-                  view all
-                </Link>
-              </div>
-              {novels && novels.length > 0 ? (
-                <div className="flex items-center w-full gap-8 mt-4 overflow-x-scroll scrollbar-hide">
-                  {novels.slice(0, 5).map((novel) => (
-                    <div
-                      key={novel._id}
-                      className="min-w-[180px] min-h-[220px] rounded-xl md:min-w-[210px] md:min-h-[250px]"
-                    >
-                      <a
-                        href={novel.novel_page_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <div>
-                          <img
-                            src={`https://example.com/images/${novel.image_id}.jpg`} // Replace with your actual image path or use Unsplash as fallback
-                            alt={novel.title}
-                            className="w-full h-[150px] md:h-[180px] rounded-xl border-2 object-cover"
-                          />
-                          <h2 className="mt-2 text-sm font-semibold text-center capitalize md:text-base">
-                            {novel.title}
-                          </h2>
-                          <p className="text-xs text-center text-gray-500 md:text-sm">
-                            {novel.genre.slice(0, 2).join(", ")}
-                          </p>
-                        </div>
-                      </a>
-                    </div>
-                  ))}
+          {liked && (
+
+            <div>
+              {/* {LikedError && (
+                <div>
+
+                </div>
+              )} */}
+              {LikedLoading ? (
+                <div className="flex items-center justify-center mt-[10%]">
+                  <div className="w-fit">
+                    <div className="loader"></div>
+                  </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center mt-10 text-gray-400">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-24 h-24 mb-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 12h6m2 0a2 2 0 100-4h-6a2 2 0 100 4m0 0a2 2 0 100 4h6a2 2 0 100-4"
-                    />
-                  </svg>
-                  <p className="text-lg capitalize">
-                    last opened novel will be displayed here
-                  </p>
+                <div className="mt-8 lg:mt-[-60px] ">
+                  <div className="flex items-center justify-between">
+                    <h1 className="text-lg font-bold tracking-widest capitalize md:text-xl">
+                      liked novel
+                    </h1>
+                    {/* <Link className="mr-3 capitalize" to="/recomended">
+                    view all
+                  </Link> */}
+                  </div>
+                  {Array.isArray(liked) && liked.length > 0 ? (
+                    <div className="flex items-center w-full gap-8 mt-4 overflow-x-scroll scrollbar-hide">
+                      {liked.map((liked) => (
+                        <div
+                          key={liked._id}
+                          className="min-w-[180px] min-h-[220px] rounded-xl md:min-w-[210px] md:min-h-[250px]"
+                        >
+                          <a
+                            href={liked.novel_pages_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <div>
+                              <img
+                                src={liked.image_url}
+                                alt={liked.title ?? "Novel image"}
+                                className="w-full h-[150px] md:h-[180px] rounded-xl border-2 object-cover"
+                              />
+                              <h2 className="mt-2 text-sm font-semibold text-center capitalize md:text-base">
+                                {liked.title ?? "No Title"}
+                              </h2>
+                              <p className="text-xs text-center text-gray-500 md:text-sm">
+                                {liked.genres?.slice(0, 2).join(", ") ??
+                                  "No Genres"}
+                              </p>
+                            </div>
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center mt-10 text-gray-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-24 h-24 mb-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12h6m2 0a2 2 0 100-4h-6a2 2 0 100 4m0 0a2 2 0 100 4h6a2 2 0 100-4"
+                        />
+                      </svg>
+                      <p className="text-lg capitalize">
+                        last opened novel will be displayed here
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           )}
-        </section> */}
+        </section>
 
         <section>
           <div className="mt-9 md:mt-14">
