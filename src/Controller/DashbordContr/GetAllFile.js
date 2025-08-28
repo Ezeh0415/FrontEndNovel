@@ -298,9 +298,10 @@ export const MyProvider = ({ children }) => {
   };
 
   // Liked section
-
+  const likedUser = localStorage.getItem("user");
+    const userId = likedUser ? JSON.parse(likedUser).id : null;
   const { liked, LikedLoading, LikedError } = LikedNovel(
-    `${Base_Url}novelLiked`
+    `${Base_Url}novelLiked/${userId}`
   );
 
   // Review section

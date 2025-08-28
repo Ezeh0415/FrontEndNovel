@@ -221,7 +221,7 @@ const Dashboard = () => {
                         />
                       </svg>
                       <p className="text-lg capitalize">
-                        last opened novel will be displayed here
+                        liked novel will be displayed here
                       </p>
                     </div>
                   )}
