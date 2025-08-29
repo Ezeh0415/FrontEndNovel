@@ -18,14 +18,13 @@ import ProtectedRoute from "./View/Auth/Protected/ProtectedRoute";
 import { useEffect } from "react";
 
 function App() {
-  const { handleStart, openLoader, isAuthenticated,userProfile } = useMyContext();
+  const { handleStart, openLoader, isAuthenticated, userProfile } =
+    useMyContext();
   const auth = isAuthenticated();
-  
-  
+
   useEffect(() => {
     if (openLoader) {
-      handleStart(); 
-
+      handleStart();
     }
   }, [openLoader]);
   return (
@@ -34,7 +33,10 @@ function App() {
         {/* Show loader or routes */}
         {openLoader ? (
           <Routes>
-            <Route path="/" element={<OpenLoader />} />
+            <Route
+              path="*"
+              element={auth ? <Navigate to="/dashboard" /> : <OpenLoader />}
+            />
           </Routes>
         ) : (
           <>

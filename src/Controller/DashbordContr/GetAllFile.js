@@ -1,55 +1,65 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import localStorage from "localStorage";
+
+// Backend calls
 import {
   GetAllNovel,
   GetSingleNovel,
   HandleLogout,
   LikedNovel,
 } from "../../Model/getdb";
-import { useNavigate } from "react-router-dom";
-import { handleLiked, handleReview, login, signup } from "../../Model/postdb";
-import localStorage from "localStorage";
+import {
+  handleDeleteLikes,
+  handleLiked,
+  handleReview,
+  login,
+  signup,
+} from "../../Model/postdb";
 
-// 1. Create the context for global state
+// Context Setup
 const MyContext = createContext();
 const Base_Url = "https://backendnovel-production.up.railway.app/";
 
-// 2. Create the provider component
+// Provider Component
 export const MyProvider = ({ children }) => {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // Fetch all novels from backend
+  // ------------------------ Loader ------------------------
+  const [openLoader, setOpenLoader] = useState(true);
+  const handleStart = () => setTimeout(() => setOpenLoader(false), 8000);
+
+  // ------------------------ Fetch All Novels ------------------------
   const { Novel, loading, error } = GetAllNovel(`${Base_Url}books`);
 
-  // State for single novel selection
+  // ------------------------ Single Novel ------------------------
   const [singleNovel, setSingleNovel] = useState(null);
-
-  // Function to set selected novel ID
-  const handdleGetSingleNovel = (id) => {
-    localStorage.setItem("singleFileId", id);
-    setSingleNovel(id); // Also update state directly
-  };
-
-  // On component mount, load the saved ID
-  useEffect(() => {
-    const storedId = localStorage.getItem("singleFileId");
-    if (storedId) {
-      setSingleNovel(storedId);
-    }
-  }, []); // run only on first render
-
-  // Now fetch the novel when singleNovel is set
   const { SingleNovel, Singleloading, Singleerror } = GetSingleNovel(
     singleNovel ? `${Base_Url}books/${singleNovel}` : null
   );
 
+  const handdleGetSingleNovel = (id) => {
+    localStorage.setItem("singleFileId", id);
+    setSingleNovel(id);
+  };
+
+  useEffect(() => {
+    const storedId = localStorage.getItem("singleFileId");
+    if (storedId) setSingleNovel(storedId);
+  }, []);
+
+  // ------------------------ Liked Novels ------------------------
   const [likedLoading, setLikedLoading] = useState(false);
   const [likedError, setLikedError] = useState(false);
   const [LikedMessage, setLikedMessage] = useState("");
-  // liked section version
-  const handleSaveLiked = async () => {
-    const likedUser = localStorage.getItem("user");
-    const userId = likedUser ? JSON.parse(likedUser).id : null;
 
+  const likedUser = localStorage.getItem("user");
+  const userId = likedUser ? JSON.parse(likedUser).id : null;
+  const { liked, LikedLoading, LikedError } = LikedNovel(
+    `${Base_Url}novelLiked/${userId}`
+  );
+
+  const handleSaveLiked = async () => {
     if (!userId) {
       setLikedError(true);
       setLikedMessage("User not logged in");
@@ -66,7 +76,7 @@ export const MyProvider = ({ children }) => {
       rating,
       reviews,
       title,
-    } = SingleNovel;
+    } = SingleNovel || {};
 
     if (
       !_id ||
@@ -101,124 +111,81 @@ export const MyProvider = ({ children }) => {
         userId
       );
 
-      if (!result) {
+      if (!result || !result.ok) {
         setLikedError(true);
-        setLikedMessage("Like result undefined/null");
+        setLikedMessage(result?.errorMessage || "Saving failed.");
         return;
       }
 
-      if (result.ok) {
-        setLikedError(false);
-        setLikedMessage("novel Saving is successful");
-        window.location = "/dashboard";
-      } else {
-        setLikedError(true);
-        setLikedMessage(
-          result.errorMessage || "Saving failed, please try again."
-        );
-      }
+      setLikedError(false);
+      setLikedMessage("Novel saved successfully");
+      window.location = "/dashboard";
     } catch (error) {
       setLikedError(true);
       setLikedMessage("Saving failed, please try again.");
     } finally {
       setLikedLoading(false);
-      setLikedError(false);
       setTimeout(() => setLikedMessage(""), 3000);
     }
   };
 
-  // Loader state and function to start loader
-  const [openLoader, setopenLoader] = useState(true);
-  const handleStart = () => {
-    setTimeout(() => {
-      setopenLoader(false);
-    }, 8000); // Loader stays open for 8 seconds
-  };
-
-  // Authentication and signup state
-  const [firstName, setfirstName] = useState("");
-  const [lastName, setlastName] = useState("");
+  // ------------------------ Authentication ------------------------
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [btnLoading, setLoading] = useState(false);
- 
-  // Simple email validation function
-  const validateEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
-  };
 
-  // Signup form submit handler
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic input validation
     if (!firstName || !lastName || !email || !password) {
       setMessage("All fields are required.");
       return;
     }
+
     if (!validateEmail(email)) {
       setMessage("Please enter a valid email.");
       return;
     }
+
     if (password.length < 6) {
       setMessage("Password must be at least 6 characters.");
       return;
     }
 
     setLoading(true);
-    setMessage(""); // Clear any previous message
+    setMessage("");
 
     try {
-      // Call signup API
       const result = await signup(firstName, lastName, password, email);
 
-      console.log("Signup result:", result);
-      if (!result) {
-        console.error("Signup returned undefined!");
-        return;
-      }
-
-      if (result.ok) {
-        // Store token and user profile on successful signup
-        const token = result.data.accessToken;
-        const User = result.data.user;
-
-        if (User) {
-          localStorage.setItem("user", JSON.stringify(User)); // ✅ stringify the object
-        }
-
-        if (token) {
-          localStorage.setItem("jwtToken", token); // ✅ this is already a string
-        }
+      if (result?.ok) {
+        const { accessToken, user } = result.data;
+        localStorage.setItem("jwtToken", accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
 
         setMessage("Signup successful!");
-        setfirstName("");
-        setlastName("");
+        setFirstName("");
+        setLastName("");
         setEmail("");
         setPassword("");
 
-        // Navigate to dashboard after short delay
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
-        // Show error message from backend
-        setMessage(result.errorMessage || "Signup failed. Please try again.");
+        setMessage(result?.errorMessage || "Signup failed.");
       }
-    } catch (err) {
+    } catch {
       setMessage("Unexpected error. Please try again.");
     } finally {
       setLoading(false);
-      // Clear message after 3 seconds
       setTimeout(() => setMessage(""), 3000);
     }
   };
 
-  // Check if user is authenticated (token exists)
-  const isAuthenticated = () => {
-    return localStorage.getItem("jwtToken") ? true : false;
-  };
-
-  // Login function
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -236,75 +203,45 @@ export const MyProvider = ({ children }) => {
     setMessage("");
 
     try {
-      // Call login API
       const result = await login(password, email);
 
-      console.log("Login result:", result);
-      if (!result) {
-        console.error("Login returned undefined!");
-        return;
-      }
-
-      if (result.ok) {
-        // Store token and user profile on successful login
-        const token = result.data.accessToken;
-        const User = result.data.user;
-
-        if (User) {
-          localStorage.setItem("user", JSON.stringify(User)); // ✅ stringify the object
-        }
-
-        if (token) {
-          localStorage.setItem("jwtToken", token); // ✅ this is already a string
-        }
+      if (result?.ok) {
+        const { accessToken, user } = result.data;
+        localStorage.setItem("jwtToken", accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
 
         setMessage("Login successful!");
         setEmail("");
         setPassword("");
 
-        // Navigate to dashboard after short delay
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
-        // Show error message from backend
-        setMessage(result.errorMessage || "Login failed. Please try again.");
+        setMessage(result?.errorMessage || "Login failed.");
       }
-    } catch (err) {
+    } catch {
       setMessage("Unexpected error. Please try again.");
     } finally {
-      setEmail("");
-      setPassword("");
       setLoading(false);
-      // Clear message after 3 seconds
       setTimeout(() => setMessage(""), 3000);
     }
   };
 
-  // Logout function
+  const isAuthenticated = () => !!localStorage.getItem("jwtToken");
+
   const [model, setModel] = useState(false);
   const Logout = async () => {
-    console.log("Logout started");
-
     try {
       localStorage.removeItem("jwtToken");
       localStorage.removeItem("user");
       setModel(false);
       await HandleLogout(`${Base_Url}logout`);
-
-      console.log("Logout successful, redirecting...");
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  // Liked section
-  const likedUser = localStorage.getItem("user");
-    const userId = likedUser ? JSON.parse(likedUser).id : null;
-  const { liked, LikedLoading, LikedError } = LikedNovel(
-    `${Base_Url}novelLiked/${userId}`
-  );
-
-  // Review section
+  // ------------------------ Reviews ------------------------
   const [review, setReview] = useState("");
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
@@ -313,7 +250,8 @@ export const MyProvider = ({ children }) => {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    const usersLastName = JSON.parse(Users).lastName;
+    const usersLastName = JSON.parse(Users)?.lastName;
+
     if (!review || !usersLastName) {
       setReviewError(true);
       setReviewMessage("All fields are required.");
@@ -325,66 +263,109 @@ export const MyProvider = ({ children }) => {
 
     try {
       const result = await handleReview(review, usersLastName, singleNovel);
-      console.log("Review result:", result);
 
-      if (!result) {
-        console.error("Review returned undefined!");
-        return;
-      }
-
-      if (result.ok) {
+      if (result?.ok) {
         setReviewMessage("Review submitted successfully!");
         setReview("");
         navigate(0);
       }
     } catch (error) {
-      setReviewError(error.errorMessage);
+      setReviewError(true);
+      setReviewMessage("Failed to submit review.");
     } finally {
       setReviewLoading(false);
     }
   };
 
-  // Provide all state and functions to children via context
+  // ------------------------ delete like novel ------------------------
+
+  const handleDeleteLike = async (bookId) => {
+    // Get user from localStorage and parse it
+    const user = localStorage.getItem("user");
+    const userId = user ? JSON.parse(user).id : null;
+
+    if (!userId || !bookId) {
+      // Optionally set an error message here
+      setLikedMessage("User or Book ID missing.");
+      setLikedError(true);
+      return;
+    }
+
+    try {
+      const result = await handleDeleteLikes(userId, bookId);
+
+      if (result?.ok) {
+        setLikedMessage("Like removed successfully.");
+        setLikedError(false);
+        // Optionally refresh liked novels or UI here
+      } else {
+        setLikedMessage(result?.errorMessage || "Failed to remove like.");
+        setLikedError(true);
+      }
+    } catch (error) {
+      setLikedMessage("Error removing like.");
+      setLikedError(true);
+    } finally {
+      setTimeout(() => setLikedMessage(""), window.location.reload(), 3000);
+    }
+  };
+
+  // ------------------------ Context Value ------------------------
   return (
     <MyContext.Provider
       value={{
+        // Data
         Novel,
         loading,
         error,
         SingleNovel,
         Singleloading,
+        Singleerror,
+        liked,
+        LikedLoading,
+        LikedError,
+
+        // Functions
         handdleGetSingleNovel,
+        handleSaveLiked,
+        handleSubmitReview,
+        handleSubmit,
+        handleLogin,
+        Logout,
         handleStart,
-        openLoader,
+
+        // Auth States
         isAuthenticated,
         firstName,
         lastName,
         email,
         password,
-        message,
-        handleSubmit,
-        setfirstName,
-        setlastName,
+        setFirstName,
+        setLastName,
         setEmail,
         setPassword,
         btnLoading,
-        handleLogin,
+        message,
         model,
         setModel,
-        Logout,
+
+        // Liked States
+        likedLoading,
+        likedError,
+        LikedMessage,
+
+        // delete likes
+        handleDeleteLike,
+
+        // Review States
         review,
+        setReview,
         reviewLoading,
         reviewError,
         reviewMessage,
-        setReview,
-        handleSubmitReview,
-        handleSaveLiked,
-        LikedMessage,
-        likedError,
-        likedLoading,
-        liked,
-        LikedLoading,
-        LikedError,
+
+        // Loader
+        openLoader,
       }}
     >
       {children}
@@ -392,5 +373,5 @@ export const MyProvider = ({ children }) => {
   );
 };
 
-// 3. Custom hook to use context easily
+// Custom Hook
 export const useMyContext = () => useContext(MyContext);

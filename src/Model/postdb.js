@@ -150,3 +150,29 @@ export const handleLiked = async (
       return { ok: false, errorMessage: error.message };
     });
 };
+
+export const handleDeleteLikes = (userId, bookId) => {
+  return fetch(`${Base_Url}/books/like/${userId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: bookId,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "Novel delete failed");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
