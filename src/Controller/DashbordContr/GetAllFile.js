@@ -14,6 +14,8 @@ import {
   handleLiked,
   handleReview,
   login,
+  searchAuthor,
+  searchTitle,
   signup,
 } from "../../Model/postdb";
 
@@ -39,8 +41,9 @@ export const MyProvider = ({ children }) => {
   );
 
   const handdleGetSingleNovel = (id) => {
-    localStorage.setItem("singleFileId", id);
     setSingleNovel(id);
+    localStorage.setItem("singleFileId", id);
+     navigate("/NovelDetail");
   };
 
   useEffect(() => {
@@ -310,6 +313,83 @@ export const MyProvider = ({ children }) => {
     }
   };
 
+  // ------------------------ search novel ------------------------
+  const [Search, setSearch] = useState("");
+  const [SearchResult,setSearchResult] = useState();
+  const [SearchLoading, setSearchLoading] = useState(false);
+  const [SearchError, setSearchError] = useState(true);
+  const [SearchMessage, setSearchMessage] = useState("");
+
+  // Combine searchTitle and searchAuthor results into one search
+// const search = async (query) => {
+//   try {
+//     const [titleResult, authorResult] = await Promise.all([
+//       searchTitle(Search),
+//       searchAuthor(Search)
+//     ]);
+
+//     const success = titleResult?.ok || authorResult?.ok;
+
+//     if (!success) {
+//       return {
+//         ok: false,
+//         errorMessage:
+//           titleResult?.errorMessage ||
+//           authorResult?.errorMessage ||
+//           "No results found.",
+//       };
+//     }
+
+//     return {
+//       ok: true,
+//       data: [
+//         ...(titleResult?.data || []),
+//         ...(authorResult?.data || [])
+//       ],
+//     };
+
+//   } catch (error) {
+//     console.error("Search error:", error);
+//     return {
+//       ok: false,
+//       errorMessage: "An unexpected error occurred during search.",
+//     };
+//   }
+// };
+
+  const handleSearchTitle = async (e) => {
+    e.preventDefault();
+
+    setSearchLoading(true);
+
+    if (!Search) {
+      setSearchLoading(false);
+      setSearchError(true);
+      throw new Error("input is invalid please type ");
+    }
+
+    setSearchLoading(true);
+    
+    try {
+      const result = await searchTitle(Search);
+      if (result?.ok) {
+        setSearchLoading(false);
+        setSearchResult(result.data);
+        setSearchError(false);
+        // Optionally refresh liked novels or UI here
+      } else {
+        setSearchLoading(false);
+        setSearchMessage(result?.errorMessage || "Failed to fetch data.");
+        setSearchError(true);
+      }
+    }  catch (error) {
+      setSearchMessage("Error removing like.");
+      setSearchError(true);
+    } finally {
+      setTimeout(() => setSearchMessage(""), 3000);
+    }
+  };
+
   // ------------------------ Context Value ------------------------
   return (
     <MyContext.Provider
@@ -348,6 +428,15 @@ export const MyProvider = ({ children }) => {
         message,
         model,
         setModel,
+
+        // Search states
+        handleSearchTitle,
+        Search,
+        SearchResult,
+        setSearch,
+        SearchError,
+        SearchLoading,
+        SearchMessage,
 
         // Liked States
         likedLoading,

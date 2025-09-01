@@ -32,7 +32,7 @@ export default function NovelDetails() {
           </div>
         ) : (
           SingleNovel && (
-            <div className=" mx-auto text-white">
+            <div className="mx-auto text-white ">
               {/* Back Button */}
               <Link
                 to="/recomended"
@@ -55,41 +55,41 @@ export default function NovelDetails() {
                 <span>Back</span>
               </Link>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 md:gap-8">
                 {/* Novel Info Section */}
-                <div className="flex flex-col gap-8 md:flex-row">
+                <div className="flex flex-col gap-8 md:flex-row ">
                   {/* Image */}
                   <img
                     src={SingleNovel.image_url}
                     alt={SingleNovel.title}
-                    className="object-cover  rounded-lg shadow-md  max-w-[10rem] md:w-48 md:h-72"
+                    className=" rounded-lg shadow-md  w-[12rem] md:w-[25rem] md:h-72"
                   />
                 </div>
 
                 <div>
                   {/* Details */}
                   <div className="flex-1 space-y-4 md:text-left">
-                    <h1 className="text-xl md:text-2xl lg:text-4xl font-bold">
+                    <h1 className="text-xl font-bold md:text-4xl lg:text-6xl">
                       {SingleNovel.title}
                     </h1>
-                    <p className="text-lg text-gray-300">
+                    <p className="text-lg text-gray-300 md:text-xl lg:text-4xl" >
                       by {SingleNovel.author}
                     </p>
                     <div className="flex gap-2">
-                      <p className="font-medium text-yellow-300 text-md">
+                      <p className="font-medium text-yellow-300 text-md md:text-xl lg:text-2xl">
                         ⭐ {SingleNovel.rating}/10
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-400 md:text-xl lg:text-2xl">
                         📄 {SingleNovel.pages} pages
                       </p>
                     </div>
 
                     {/* Genres */}
-                    <div className="flex flex-wrap justify-center gap-2 mt-3 md:justify-start">
+                    <div className="flex flex-wrap justify-center gap-2 mt-3 md:justify-start md:mt-[2rem]">
                       {SingleNovel.genres.map((genre) => (
                         <span
                           key={genre}
-                          className="px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full "
+                          className="px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full md:text-xl"
                         >
                           {genre}
                         </span>
@@ -102,7 +102,7 @@ export default function NovelDetails() {
                         href={SingleNovel.novel_pages_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400"
+                        className="inline-block px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400 md:text-xl lg:text-2xl"
                       >
                         Read Now
                       </a>
@@ -110,7 +110,7 @@ export default function NovelDetails() {
                         {LikedMessage}
                       </h1>
                       {likedLoading ? (
-                        <div className="w-fit mx-auto">
+                        <div className="mx-auto w-fit">
                           <div class="loader"></div>
                         </div>
                       ) : (
@@ -152,15 +152,15 @@ export default function NovelDetails() {
               </div>
               {/* Reviews Section */}
               <section className="mt-10 space-y-4">
-                <h2 className="text-2xl font-semibold">💬 Reviews</h2>
+                <h2 className="text-2xl font-semibold md:text-4xl">💬 Reviews</h2>
                 <ul className="space-y-4 text-gray-300">
                   {SingleNovel.reviews.map((review, index) => (
                     <li
                       key={index}
                       className="px-4 py-3 bg-gray-800 border-l-4 border-yellow-400 rounded-md"
                     >
-                      <p>
-                        <span className="font-semibold text-white">
+                      <p className="md:text-2xl ">
+                        <span className="font-semibold text-white md:text-2xl">
                           {review.reviewer}:
                         </span>{" "}
                         {review.comment}
@@ -173,16 +173,16 @@ export default function NovelDetails() {
               {/* Review Form */}
               <section className="mt-10">
                 {reviewError && (
-                  <p className="text-red-500 text-center">{reviewMessage}</p>
+                  <p className="text-center text-red-500">{reviewMessage}</p>
                 )}
 
-                <div className="p-6 space-y-6 bg-gray-900 rounded-lg shadow-md">
-                  <h2 className="text-xl font-semibold">📝 Leave a Review</h2>
+                <div className="p-6 mb-5 space-y-6 bg-gray-900 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold md:text-3xl">📝 Leave a Review</h2>
 
                   <form className="space-y-5" onSubmit={handleSubmitReview}>
                     <div>
                       <label
-                        className="block mb-1 text-sm text-gray-300"
+                        className="block mb-1 text-sm text-gray-300 md:text-xl"
                         htmlFor="review"
                       >
                         Your Review
@@ -193,7 +193,7 @@ export default function NovelDetails() {
                         value={review}
                         onChange={(e) => setReview(e.target.value)}
                         rows={4}
-                        className="w-full px-4 py-2 text-black rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        className="w-full px-4 py-2 text-black rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 md:text-xl"
                       ></textarea>
                     </div>
 
@@ -206,7 +206,7 @@ export default function NovelDetails() {
                         <button
                           type="submit"
                           onClick={() => console.log(SingleNovel._id)}
-                          className="px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400"
+                          className="px-6 py-2 text-black transition bg-yellow-300 rounded-lg hover:bg-yellow-400 md:text-xl"
                         >
                           Submit Review
                         </button>

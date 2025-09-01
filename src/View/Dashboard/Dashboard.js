@@ -201,7 +201,7 @@ const Dashboard = () => {
                               </p>
                             </div>
                           </Link>
-                          <div className="mx-auto w-fit mt-4 text-red-500">
+                          <div className="mx-auto mt-4 text-red-500 w-fit">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -269,7 +269,7 @@ const Dashboard = () => {
               <div>
                 {Novel && Novel.length > 0 ? (
                   <div className="flex items-center w-full gap-8 mt-4 overflow-x-scroll scrollbar-hide">
-                    {Novel.slice(0, 5).map((singleNovel) => (
+                    {Novel.slice(0, 6).map((singleNovel) => (
                       <div
                         key={singleNovel._id}
                         className="min-w-[180px] min-h-[220px] rounded-xl md:min-w-[210px] md:min-h-[250px]"

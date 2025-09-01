@@ -125,7 +125,7 @@ function App() {
             <div
               className={
                 auth
-                  ? "fixed w-[97%] top-[92vh] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden"
+                  ? "fixed bottom-4 md:bottom-6 w-[97%] ml-[5px] backdrop-blur-xl rounded-md mx-3 sm:block md:hidden py-2"
                   : "hidden"
               }
             >

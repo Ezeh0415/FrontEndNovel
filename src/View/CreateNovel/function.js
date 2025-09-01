@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export default function useNovelForm() {
   const [step, setStep] = useState(1);
+  const [preview, setPreview] = useState(null); // For image preview (optional)
 
   const [formData, setFormData] = useState({
     title: "",
@@ -9,13 +10,30 @@ export default function useNovelForm() {
     genres: "", // comma separated
     pages: "",
     rating: "",
-    imageUrl: "",
+    imageUrl: "", // will be base64 string
     novelUrl: "",
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+
+    // Special case for image input
+    if (name === "imageUrl" && files && files[0]) {
+      const file = files[0];
+
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
+          setPreview(reader.result);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
@@ -33,7 +51,7 @@ export default function useNovelForm() {
         .filter(Boolean),
       pages: parseInt(formData.pages, 10),
       rating: parseFloat(formData.rating),
-      image_url: formData.imageUrl,
+      image_url: formData.imageUrl, // base64 image string
       novel_pages_url: formData.novelUrl,
     };
 
@@ -44,6 +62,7 @@ export default function useNovelForm() {
   return {
     step,
     formData,
+    preview,
     handleChange,
     nextStep,
     prevStep,

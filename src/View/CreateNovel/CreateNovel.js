@@ -1,7 +1,14 @@
 import useNovelForm from "./function";
 export default function MultiStepNovelForm() {
-  const { step, formData, handleChange, nextStep, prevStep, handleSubmit } =
-    useNovelForm();
+  const {
+    step,
+    formData,
+    preview,
+    handleChange,
+    nextStep,
+    prevStep,
+    handleSubmit,
+  } = useNovelForm();
 
   return (
     <div className="max-w-md p-6 mx-auto mt-4 rounded shadow sm:max-w-lg md:max-w-xl lg:max-w-2xl">
@@ -84,13 +91,13 @@ export default function MultiStepNovelForm() {
               Step 3: URLs
             </h2>
             <input
-              type="url"
+              type="file"
+              accept="image/*"
               name="imageUrl"
               placeholder="Cover Image URL"
-              value={formData.imageUrl}
               onChange={handleChange}
               required
-              className="w-full p-3 mb-6 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-6 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <input
               type="url"
@@ -126,7 +133,14 @@ export default function MultiStepNovelForm() {
                 <strong>Rating:</strong> {formData.rating}
               </p>
               <p>
-                <strong>Cover Image URL:</strong> {formData.imageUrl}
+                <strong>Cover Image URL:</strong>
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="object-contain w-32 h-32 mt-2 md:w-52"
+                  />
+                )}
               </p>
               <p>
                 <strong>Novel Pages URL:</strong> {formData.novelUrl}

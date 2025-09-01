@@ -1,16 +1,33 @@
 import React from "react";
+import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
 
 const Search = () => {
+  const {
+    Search,
+    setSearch,
+    SearchError,
+    SearchLoading,
+    SearchMessage,
+    handleSearchTitle,
+    SearchResult,
+    handdleGetSingleNovel,
+  } = useMyContext();
+  const { data: results } = SearchResult || {};
+  console.log(results);
+
   return (
     <div>
       <div className="min-h-screen p-6">
         <div>
           {/* Search Bar */}
-          <form className="flex mb-8" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex mb-8" onSubmit={handleSearchTitle}>
             <input
               type="text"
-              placeholder="Search for novels, authors, genres..."
-              className="flex-grow px-4 py-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              value={Search}
+              onChange={(e) => setSearch(e.target.value)}
+              required
+              placeholder="Search for novels, authors, title"
+              className="flex-grow px-4 py-3 text-black border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
               type="submit"
@@ -21,54 +38,78 @@ const Search = () => {
           </form>
 
           {/* Search Results */}
+          {SearchLoading && <p>Loading...</p>}
+          {/* {SearchError && (
+            <div className="mx-auto w-fit">
+              <p>{SearchError}</p>
+            </div>
+          )} */}
+
           <div className="space-y-6 lg:grid lg:grid-cols-2">
             {/* Example result card */}
-            <div className="flex overflow-hidden rounded-lg shadow-md">
-              <img
-                className="object-cover w-24 h-32"
-                src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&q=80"
-                alt="Novel Cover"
-              />
-              <div className="flex flex-col justify-between p-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-100">
-                    The Enchanted Forest
-                  </h3>
-                  <p className="text-sm italic text-gray-200">by Jane Writer</p>
-                  <p className="mt-2 text-sm text-gray-300 line-clamp-3">
-                    Dive into a magical journey through an ancient forest filled
-                    with mystery, magic, and unforgettable characters.
-                  </p>
+            {SearchError ? (
+              <div>
+                <div className="mx-auto text-white w-fit">
+                  <p>{SearchMessage}</p>
                 </div>
-                <button className="px-3 py-1 mt-4 text-white transition bg-yellow-600 rounded hover:bg-yellow-700 w-max">
-                  View Details
-                </button>
               </div>
-            </div>
-            <div className="flex overflow-hidden rounded-lg shadow-md">
-              <img
-                className="object-cover w-24 h-32"
-                src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&q=80"
-                alt="Novel Cover"
-              />
-              <div className="flex flex-col justify-between p-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-100">
-                    The Enchanted Forest
-                  </h3>
-                  <p className="text-sm italic text-gray-200">by Jane Writer</p>
-                  <p className="mt-2 text-sm text-gray-300 line-clamp-3">
-                    Dive into a magical journey through an ancient forest filled
-                    with mystery, magic, and unforgettable characters.
-                  </p>
-                </div>
-                <button className="px-3 py-1 mt-4 text-white transition bg-yellow-600 rounded hover:bg-yellow-700 w-max">
-                  View Details
-                </button>
+            ) : (
+              <div>
+                {!results || results.length === 0 ? (
+                  <div>
+                    <h1 className="text-white">input query to search</h1>
+                  </div>
+                ) : (
+                  results.map((novel) => (
+                    <div
+                      key={novel._id}
+                      className="overflow-hidden rounded-lg shadow-md md:flex md:items-center md:gap-8"
+                    >
+                      <img
+                        className="object-cover w-full h-32 md:w-56 md:h-48"
+                        src={
+                          novel.image_url 
+                        }
+                        alt={`${novel.title} Cover`}
+                      />
+                      <div className="flex flex-col justify-between p-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-100">
+                            {novel.title}
+                          </h3>
+                          <p className="text-sm italic text-gray-200">
+                            by {novel.author}
+                          </p>
+                          <div className="flex items-center gap-3 capitalize">
+                            {novel.genres.map((gen) => {
+                              return (
+                                <div className="flex items-center gap-3">
+                                  <p>{gen}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div className="flex items-center gap-4 capitalize">
+                            <p className="mt-2 text-sm text-gray-300 line-clamp-3">
+                              pages : {novel.pages}
+                            </p>
+                            <p className="mt-2 text-sm text-gray-300 line-clamp-3">
+                              Rating : {novel.rating}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handdleGetSingleNovel(novel._id)}
+                        className="px-3 py-1 mt-4 text-white transition bg-yellow-600 rounded hover:bg-yellow-700 w-max"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
-            </div>
-
-            {/* Add more cards as needed */}
+            )}
           </div>
         </div>
       </div>

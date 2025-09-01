@@ -176,3 +176,54 @@ export const handleDeleteLikes = (userId, bookId) => {
       return { ok: false, errorMessage: error.message };
     });
 };
+
+export const searchTitle = (Search) => {
+  return fetch(`${Base_Url}/books/BookByTitle`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      search:Search,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "Novel delete failed");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
+export const searchAuthor = (Search) => {
+  return fetch(`${Base_Url}/books/BookByAuthor`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      Search,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "Novel delete failed");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
