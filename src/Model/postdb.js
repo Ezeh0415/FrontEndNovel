@@ -184,7 +184,7 @@ export const searchTitle = (Search) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      search:Search,
+      search: Search,
     }),
   })
     .then((response) => {
@@ -210,6 +210,46 @@ export const searchAuthor = (Search) => {
     },
     body: JSON.stringify({
       Search,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "Novel delete failed");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
+
+export const createNovel = (
+  title,
+  author,
+  genres,
+  pages,
+  rating,
+  image_url,
+  novel_pages_url
+) => {
+  return fetch(`${Base_Url}/books`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      author,
+      genres,
+      pages,
+      rating,
+      image_url,
+      novel_pages_url,
     }),
   })
     .then((response) => {

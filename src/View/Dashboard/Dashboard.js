@@ -269,7 +269,7 @@ const Dashboard = () => {
               <div>
                 {Novel && Novel.length > 0 ? (
                   <div className="flex items-center w-full gap-8 mt-4 overflow-x-scroll scrollbar-hide">
-                    {Novel.slice(0, 6).map((singleNovel) => (
+                    {Novel.slice(1, 7).map((singleNovel) => (
                       <div
                         key={singleNovel._id}
                         className="min-w-[180px] min-h-[220px] rounded-xl md:min-w-[210px] md:min-h-[250px]"

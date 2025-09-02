@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { createNovel } from "../../Model/postdb";
+
 
 export default function useNovelForm() {
   const [step, setStep] = useState(1);
@@ -39,24 +41,37 @@ export default function useNovelForm() {
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const novelData = {
-      title: formData.title,
-      author: formData.author,
-      genres: formData.genres
+    
+      const title =  formData.title
+      const author = formData.author
+      const genres = formData.genres
         .split(",")
         .map((g) => g.trim())
-        .filter(Boolean),
-      pages: parseInt(formData.pages, 10),
-      rating: parseFloat(formData.rating),
-      image_url: formData.imageUrl, // base64 image string
-      novel_pages_url: formData.novelUrl,
-    };
+        .filter(Boolean)
+      const pages = parseInt(formData.pages, 10)
+      const rating = parseFloat(formData.rating)
+      const image_url = formData.imageUrl // base64 image string
+      const novel_pages_url = formData.novelUrl
+    
+    const result = await createNovel(title, author, genres, pages, rating, image_url, novel_pages_url);
 
-    console.log("Submitted Novel Data:", novelData);
-    alert("Submitted! Check console.");
+    console.log("Submitted Novel Data:", result);
+
+    // Reset the form data and preview
+    setFormData({
+      title: "",
+      author: "",
+      genres: "", // comma separated
+      pages: "",
+      rating: "",
+      imageUrl: "", // will be base64 string
+      novelUrl: "",
+    });
+    setPreview(null);
+    window.location = "/dashboard";
   };
 
   return {
