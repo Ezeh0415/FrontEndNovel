@@ -1,6 +1,20 @@
 import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
+import useFileInput from "./ProfileFunction";
 
 export default function Profile() {
+  const {
+    fileInputRef,
+    handleSvgClick,
+    handleFileChange,
+    imageUrl,
+    profileImgModel,
+    onCancel,
+    onConfirm,
+    profileImg,
+    ProfileError,
+    profileMessage,
+    profileStyle,
+  } = useFileInput();
   const { model, setModel, Logout, likedCount, TotalReview } = useMyContext();
   const userProfile = localStorage.getItem("user");
   const user = JSON.parse(userProfile);
@@ -41,11 +55,52 @@ export default function Profile() {
           </div>
         </div>
 
+        <div className={profileImgModel ? "block" : "hidden"}>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="w-[90%] max-w-md bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg">
+              <h2 className="text-lg font-semibold text-white mb-4 capitalize text-center">
+                Confirm Profile Image Update
+              </h2>
+
+              {imageUrl && (
+                <div className="mb-6 flex justify-center">
+                  <img
+                    src={imageUrl}
+                    alt="Preview"
+                    className="h-[60vh] rounded-md object-contain"
+                  />
+                </div>
+              )}
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 rounded hover:bg-gray-600 transition"
+                  onClick={onCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition"
+                  onClick={onConfirm}
+                >
+                  Confirm Update
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={ProfileError ? (profileStyle) : ("hidden")}>
+        
+          <span className="font-medium text-sm md:text-xl lg:text-2xl"> {profileMessage} </span>
+          
+        </div>
+
         <div className="flex flex-col items-center justify-center">
           <img
             src={
-              user.profileImg
-                ? user.profileImg
+              profileImg
+                ? profileImg
                 : "https://example.com/path/to/user-icon-blue.svg"
             }
             alt={user.firstName}
@@ -56,18 +111,20 @@ export default function Profile() {
             accept="image/*"
             name="imageUrl"
             placeholder="Cover Image URL"
-            // onChange={handleChange}
+            ref={fileInputRef}
+            onChange={handleFileChange}
             required
-            className="w-full p-3 mb-6 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="hidden"
           />
 
           <svg
+            onClick={handleSvgClick}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-6"
+            className="size-6 mt-2"
           >
             <path
               stroke-linecap="round"
@@ -78,7 +135,7 @@ export default function Profile() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold capitalize">
+          <h2 className="text-2xl font-semibold capitalize mt-[-30px]">
             {user.firstName} {user.lastName}
           </h2>
           <p className="text-gray-300">Joined Jan 2024 · Level 0</p>

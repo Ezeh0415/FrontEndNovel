@@ -58,6 +58,8 @@ export const MyProvider = ({ children }) => {
     const storedId = localStorage.getItem("singleFileId");
     if (storedId) setSingleNovel(storedId);
     handleRewiewCount()
+    console.log();
+    
   }, []);
 
   // ------------------------ Liked Novels ------------------------
@@ -397,8 +399,7 @@ export const MyProvider = ({ children }) => {
     } finally {
       setTimeout(() => setSearchMessage(""), 3000);
     }
-  };
-
+  }; 
   // ------------------------ Context Value ------------------------
   return (
     <MyContext.Provider
