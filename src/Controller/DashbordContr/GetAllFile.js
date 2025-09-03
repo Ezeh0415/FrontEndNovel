@@ -17,6 +17,7 @@ import {
   searchAuthor,
   searchTitle,
   signup,
+  totalReview,
 } from "../../Model/postdb";
 
 // Context Setup
@@ -26,6 +27,7 @@ const Base_Url = "https://backendnovel-production.up.railway.app/";
 // Provider Component
 export const MyProvider = ({ children }) => {
   const navigate = useNavigate();
+  const Users = localStorage.getItem("user");
 
   // ------------------------ Loader ------------------------
   const [openLoader, setOpenLoader] = useState(true);
@@ -43,12 +45,19 @@ export const MyProvider = ({ children }) => {
   const handdleGetSingleNovel = (id) => {
     setSingleNovel(id);
     localStorage.setItem("singleFileId", id);
-     navigate("/NovelDetail");
+    navigate("/NovelDetail");
   };
+  const [TotalReview, setTotalReview] = useState(null);
 
+  const handleRewiewCount  = async () => {
+    const UserName = JSON.parse(Users)?.lastName;
+    const result = await totalReview(UserName);
+    setTotalReview(result.data);
+  };
   useEffect(() => {
     const storedId = localStorage.getItem("singleFileId");
     if (storedId) setSingleNovel(storedId);
+    handleRewiewCount()
   }, []);
 
   // ------------------------ Liked Novels ------------------------
@@ -58,7 +67,7 @@ export const MyProvider = ({ children }) => {
 
   const likedUser = localStorage.getItem("user");
   const userId = likedUser ? JSON.parse(likedUser).id : null;
-  const { liked, LikedLoading, LikedError } = LikedNovel(
+  const { liked, likedCount, LikedLoading, LikedError } = LikedNovel(
     `${Base_Url}novelLiked/${userId}`
   );
 
@@ -131,6 +140,7 @@ export const MyProvider = ({ children }) => {
       setTimeout(() => setLikedMessage(""), 3000);
     }
   };
+
 
   // ------------------------ Authentication ------------------------
   const [firstName, setFirstName] = useState("");
@@ -249,7 +259,6 @@ export const MyProvider = ({ children }) => {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
   const [reviewMessage, setReviewMessage] = useState("");
-  const Users = localStorage.getItem("user");
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -315,47 +324,47 @@ export const MyProvider = ({ children }) => {
 
   // ------------------------ search novel ------------------------
   const [Search, setSearch] = useState("");
-  const [SearchResult,setSearchResult] = useState();
+  const [SearchResult, setSearchResult] = useState();
   const [SearchLoading, setSearchLoading] = useState(false);
   const [SearchError, setSearchError] = useState(true);
   const [SearchMessage, setSearchMessage] = useState("");
 
   // Combine searchTitle and searchAuthor results into one search
-// const search = async (query) => {
-//   try {
-//     const [titleResult, authorResult] = await Promise.all([
-//       searchTitle(Search),
-//       searchAuthor(Search)
-//     ]);
+  // const search = async (query) => {
+  //   try {
+  //     const [titleResult, authorResult] = await Promise.all([
+  //       searchTitle(Search),
+  //       searchAuthor(Search)
+  //     ]);
 
-//     const success = titleResult?.ok || authorResult?.ok;
+  //     const success = titleResult?.ok || authorResult?.ok;
 
-//     if (!success) {
-//       return {
-//         ok: false,
-//         errorMessage:
-//           titleResult?.errorMessage ||
-//           authorResult?.errorMessage ||
-//           "No results found.",
-//       };
-//     }
+  //     if (!success) {
+  //       return {
+  //         ok: false,
+  //         errorMessage:
+  //           titleResult?.errorMessage ||
+  //           authorResult?.errorMessage ||
+  //           "No results found.",
+  //       };
+  //     }
 
-//     return {
-//       ok: true,
-//       data: [
-//         ...(titleResult?.data || []),
-//         ...(authorResult?.data || [])
-//       ],
-//     };
+  //     return {
+  //       ok: true,
+  //       data: [
+  //         ...(titleResult?.data || []),
+  //         ...(authorResult?.data || [])
+  //       ],
+  //     };
 
-//   } catch (error) {
-//     console.error("Search error:", error);
-//     return {
-//       ok: false,
-//       errorMessage: "An unexpected error occurred during search.",
-//     };
-//   }
-// };
+  //   } catch (error) {
+  //     console.error("Search error:", error);
+  //     return {
+  //       ok: false,
+  //       errorMessage: "An unexpected error occurred during search.",
+  //     };
+  //   }
+  // };
 
   const handleSearchTitle = async (e) => {
     e.preventDefault();
@@ -369,7 +378,7 @@ export const MyProvider = ({ children }) => {
     }
 
     setSearchLoading(true);
-    
+
     try {
       const result = await searchTitle(Search);
       if (result?.ok) {
@@ -382,7 +391,7 @@ export const MyProvider = ({ children }) => {
         setSearchMessage(result?.errorMessage || "Failed to fetch data.");
         setSearchError(true);
       }
-    }  catch (error) {
+    } catch (error) {
       setSearchMessage("Error removing like.");
       setSearchError(true);
     } finally {
@@ -401,9 +410,7 @@ export const MyProvider = ({ children }) => {
         SingleNovel,
         Singleloading,
         Singleerror,
-        liked,
-        LikedLoading,
-        LikedError,
+        TotalReview,
 
         // Functions
         handdleGetSingleNovel,
@@ -439,9 +446,13 @@ export const MyProvider = ({ children }) => {
         SearchMessage,
 
         // Liked States
+        liked,
+        LikedLoading,
+        LikedError,
         likedLoading,
         likedError,
         LikedMessage,
+        likedCount,
 
         // delete likes
         handleDeleteLike,

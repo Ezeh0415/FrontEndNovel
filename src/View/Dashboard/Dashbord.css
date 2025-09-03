@@ -46,3 +46,8 @@
     margin-left: 1px;
   }
 }
+
+.scrollbar {
+  overflow-x: scroll;
+  scrollbar-width:none;
+}

@@ -228,6 +228,32 @@ export const searchAuthor = (Search) => {
     });
 };
 
+export const totalReview = (UserName) => {
+  return fetch(`${Base_Url}/books/review/count`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      UserName,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "review count failed");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
+
 export const createNovel = (
   title,
   author,

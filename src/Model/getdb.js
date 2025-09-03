@@ -72,6 +72,7 @@ export const HandleLogout = async (url) => {
 // Fetch liked novels
 export const LikedNovel = (url) => {
   const [liked, setLiked] = useState(null);
+  const [likedCount, setLikedCount] = useState(null);
   const [LikedLoading, setLikedLoading] = useState(true);
   const [LikedError, setLikedError] = useState(null);
 
@@ -88,10 +89,11 @@ export const LikedNovel = (url) => {
       })
       .then((data) => {
         setLiked(data.data); // Assign fetched data
+        setLikedCount(Array.isArray(data?.data) ? data.data.length : 0);
       })
       .catch((e) => setLikedError(e.message))
       .finally(() => setLikedLoading(false));
   }, [url]);
 
-  return { liked, LikedLoading, LikedError };
+  return { liked, likedCount, LikedLoading, LikedError };
 };
