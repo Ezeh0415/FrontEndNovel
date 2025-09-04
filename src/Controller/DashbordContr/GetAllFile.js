@@ -49,7 +49,7 @@ export const MyProvider = ({ children }) => {
   };
   const [TotalReview, setTotalReview] = useState(null);
 
-  const handleRewiewCount  = async () => {
+  const handleRewiewCount = async () => {
     const UserName = JSON.parse(Users)?.lastName;
     const result = await totalReview(UserName);
     setTotalReview(result.data);
@@ -57,9 +57,8 @@ export const MyProvider = ({ children }) => {
   useEffect(() => {
     const storedId = localStorage.getItem("singleFileId");
     if (storedId) setSingleNovel(storedId);
-    handleRewiewCount()
+    handleRewiewCount();
     console.log();
-    
   }, []);
 
   // ------------------------ Liked Novels ------------------------
@@ -142,7 +141,6 @@ export const MyProvider = ({ children }) => {
       setTimeout(() => setLikedMessage(""), 3000);
     }
   };
-
 
   // ------------------------ Authentication ------------------------
   const [firstName, setFirstName] = useState("");
@@ -399,7 +397,7 @@ export const MyProvider = ({ children }) => {
     } finally {
       setTimeout(() => setSearchMessage(""), 3000);
     }
-  }; 
+  };
   // ------------------------ Context Value ------------------------
   return (
     <MyContext.Provider

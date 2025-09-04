@@ -11,6 +11,12 @@ export default function useFileInput() {
   const [profileStyle, setProfileStyle] = useState("");
   const fileInputRef = useRef(null);
 
+  let email;
+
+  const userProfile = localStorage.getItem("user");
+  const user = JSON.parse(userProfile);
+  email = user?.email || "";
+
   const handleSvgClick = () => {
     fileInputRef.current.click();
   };
@@ -35,16 +41,18 @@ export default function useFileInput() {
     setProfileImgModel(false);
   };
 
-  const userProfile = localStorage.getItem("user");
-  const user = JSON.parse(userProfile);
-  const email = user.email;
-
   const onLoad = async () => {
     const profileResult = await getProfileImg(email);
-    setProfileImg(profileResult.data.userImage);
+    const image =
+      profileResult?.data?.userImage || "/images/default-profile.png";
+    setProfileImg(image);
   };
 
-  onLoad();
+  if (email === "") {
+    console.log("user is logged out");
+  } else {
+    onLoad();
+  }
 
   const onConfirm = async () => {
     const userImage = imageUrl;

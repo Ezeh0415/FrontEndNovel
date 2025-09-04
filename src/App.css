@@ -46,6 +46,8 @@ body {
     #000000;
   /* height: 130vh; */
   scrollbar-width: none;
+  height: 100vh;
+  color: wheat;
 }
 
 .container {

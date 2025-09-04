@@ -1,31 +1,42 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
+import useFileInput from "../Profile/ProfileFunction";
 
 const DesktopHeader = () => {
+  const { profileImg } = useFileInput();
   return (
     <div>
-      <nav className="flex items-center justify-between md:flex-col md:gap-5 md:backdrop-blur-xl md:bg-gray-800 md:p-4 md:h-[99vh]">
-        <div className="p-2 border-2 rounded-full w-fit">
+      <nav className=" w-[100%] flex items-center gap-[73vw]   md:flex-col md:w-[15vw]">
+        <div className="p-2  rounded-full w-fit">
           <Link to="/profile">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            {profileImg ? (
+              <img
+                src={profileImg}
+                alt="profile img"
+                className="w-[40px] h-[40px] rounded-full md:w-[80px] md:h-[80px]"
               />
-            </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                />
+              </svg>
+            )}
           </Link>
+          <div className="hidden md:block bg-black md:mt-32">
+            <Header />
+          </div>
         </div>
-
-        <div className="hidden md:block"><Header /></div>
 
         <div>
           <svg

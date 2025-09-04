@@ -90,22 +90,37 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className={ProfileError ? (profileStyle) : ("hidden")}>
-        
-          <span className="font-medium text-sm md:text-xl lg:text-2xl"> {profileMessage} </span>
-          
+        <div className={ProfileError ? profileStyle : "hidden"}>
+          <span className="font-medium text-sm md:text-xl lg:text-2xl">
+            {" "}
+            {profileMessage}{" "}
+          </span>
         </div>
 
         <div className="flex flex-col items-center justify-center">
-          <img
-            src={
-              profileImg
-                ? profileImg
-                : "https://example.com/path/to/user-icon-blue.svg"
-            }
-            alt={user.firstName}
-            className=" w-20 h-20 rounded-full"
-          />
+          {profileImg ? (
+            <img
+              src={profileImg}
+              alt={user.firstName}
+              className=" w-20 h-20 rounded-full"
+            />
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+              />
+            </svg>
+          )}
+
           <input
             type="file"
             accept="image/*"
@@ -138,7 +153,7 @@ export default function Profile() {
           <h2 className="text-2xl font-semibold capitalize mt-[-30px]">
             {user.firstName} {user.lastName}
           </h2>
-          <p className="text-gray-300">Joined Jan 2024 · Level 0</p>
+          <p className="text-gray-300">Joined Jan 2024</p>
         </div>
       </div>
 
@@ -149,7 +164,6 @@ export default function Profile() {
           <li>Currently Reading: 0</li>
           <li>Completed: 0</li>
           <li>Bookmarks: 0</li>
-          <li>Reading History: Active since 2022</li>
         </ul>
       </section>
 

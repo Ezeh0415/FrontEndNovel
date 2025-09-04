@@ -17,7 +17,7 @@ function SignupPage() {
     btnLoading
   } = useMyContext();
   return (
-    <div className="flex items-center justify-center min-h-screen px-2 capitalize sm:px-4 bg-gradient-to-br from-gray-900 to-gray-800">
+    <div className="flex items-center justify-center min-h-screen px-2 capitalize sm:px-4 mx-4 ml-[-5px] md:ml-[15%] lg:ml-0">
       <div className="w-full max-w-md p-4 bg-gray-900 border border-gray-700 shadow-2xl sm:p-8 rounded-xl">
         <h2 className="mb-6 text-3xl font-bold text-center text-white">
           Create Account

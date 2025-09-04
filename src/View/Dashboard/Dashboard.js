@@ -19,7 +19,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="mb-[2rem] md:mb-0">
+      <div className="mb-[2rem] md:mb-0 mx-2">
         <section className="lg:flex lg:items-center lg:justify-between">
           <div className="flex flex-col capitalize text-[40px] overflow-hidden mb-[8rem]">
             <div className="flex items-center gap-2 sm:animation-1">
