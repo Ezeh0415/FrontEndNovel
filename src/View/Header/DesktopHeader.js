@@ -8,7 +8,7 @@ const DesktopHeader = () => {
   return (
     <div>
       <nav className=" w-[100%] flex items-center gap-[73vw]   md:flex-col md:w-[15vw]">
-        <div className="p-2  rounded-full w-fit">
+        <div className="p-2  w-fit  sm:h-[100vh] ">
           <Link to="/profile">
             {profileImg ? (
               <img
@@ -33,7 +33,7 @@ const DesktopHeader = () => {
               </svg>
             )}
           </Link>
-          <div className="hidden md:block bg-black md:mt-32">
+          <div className="hidden md:block bg-black sm:fixed sm:top-[20rem] sm:ml-5 md:mt-32">
             <Header />
           </div>
         </div>

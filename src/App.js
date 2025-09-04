@@ -46,7 +46,7 @@ function App() {
             <DesktopHeader />
           </div>
         )}
-        <div className="md:col-span-10 ">
+        <div className="md:col-span-10 sm:border-2">
           <Routes>
             {/* Public routes */}
             <Route
