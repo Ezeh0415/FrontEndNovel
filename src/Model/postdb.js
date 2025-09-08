@@ -305,6 +305,59 @@ export const getProfileImg = (email) => {
     });
 };
 
+export const UserSubscribe = (email) => {
+  return fetch(`${Base_Url}/user/subscribe`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "subscription failed ");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
+
+export const UserDelete = (userId, email) => {
+  return fetch(`${Base_Url}/user/deleteUser`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: userId,
+      email: email,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "subscription failed ");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return { ok: true, data };
+    })
+    .catch((error) => {
+      return { ok: false, errorMessage: error.message };
+    });
+};
+
 export const createNovel = (
   title,
   author,

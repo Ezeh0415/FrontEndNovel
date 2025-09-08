@@ -39,7 +39,7 @@ const navItems = [
     label: "pen",
     icon: (
       <svg
-        className="size-6 md:size-10"
+        className="size-6 md:size-10 md:ml-[-15px]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 640 640"
         fill="currentColor"
@@ -53,7 +53,7 @@ const navItems = [
     label: "like",
     icon: (
       <svg
-        className="size-6 md:size-10"
+        className="size-6 md:size-10 md:ml-[-15px]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 640 640"
         fill="currentColor"
@@ -86,7 +86,6 @@ const navItems = [
 ];
 
 export default function Header() {
-  const Navigate = useNavigate();
   return (
     <nav className="flex items-center justify-evenly md:flex-col md:gap-y-16 md:justify-items-start md:mt-[-250px] lg:mt-[0px]">
       {/* flex items-center justify-between px-4 py-8 text-white bg-gray-800 md:flex-col md:gap-y-16 md:justify-items-start */}
@@ -94,14 +93,15 @@ export default function Header() {
         <NavLink
           key={item.label}
           to={item.path}
+          onClick={localStorage.setItem("lastPage", item.path)}
           className={({ isActive }) =>
             isActive
-              ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500 "
-              : "flex flex-col items-center justify-center font-light capitalize "
+              ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500  md:flex-row md:gap-x-4"
+              : "flex flex-col items-center justify-center font-light capitalize md:flex-row md:gap-x-4"
           }
         >
-          {item.icon}
-          <p>{item.label}</p>
+          <p>{item.icon}</p>
+          <p className="md:text-xl">{item.label}</p>
         </NavLink>
       ))}
     </nav>

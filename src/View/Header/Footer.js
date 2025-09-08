@@ -1,4 +1,14 @@
+import DashboardFunction from "../Dashboard/DashboardFunction";
+
 const Footer = () => {
+  const {
+    handleSubscribeSubmit,
+    subscribeInput,
+    setSubscribe,
+    subLoading,
+    subError,
+    subMessage,
+  } = DashboardFunction();
   return (
     <div>
       <footer className="py-8 mt-20 sm:mb-[6rem] md:mb-0 text-gray-300 w-[98%] mx-auto max-w-7xl">
@@ -19,19 +29,40 @@ const Footer = () => {
             <h3 className="mb-3 font-semibold tracking-wider text-yellow-500 uppercase">
               Subscribe to Newsletter
             </h3>
-            <form className="flex flex-col items-center max-w-md mx-auto sm:flex-row sm:items-stretch md:mx-0">
+            <form
+              onSubmit={handleSubscribeSubmit}
+              className="flex flex-col items-center max-w-md mx-auto sm:flex-row sm:items-stretch md:mx-0"
+            >
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={subscribeInput}
+                onChange={(e) => setSubscribe(e.target.value)}
                 className="flex-grow w-full h-10 px-3 text-gray-900 placeholder-gray-500 border-2 border-yellow-500 rounded-l-lg sm:w-auto focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
-              <button
-                type="submit"
-                className="px-6 py-2 mt-3 font-semibold text-gray-900 transition bg-yellow-500 rounded-r-lg sm:mt-0 sm:ml-2 hover:bg-yellow-400 whitespace-nowrap"
-              >
-                Subscribe
-              </button>
+              {subError ? (
+                <div>
+                  <p className="text-red-600 text-sm mt-1 capitalize">
+                    {subMessage}
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  {subLoading ? (
+                    <div className="loader mt-5 mb-3 md:mt-0 md:ml-4"></div>
+                  ) : (
+                    <div>
+                      <button
+                        type="submit"
+                        className="px-6 py-2 mt-3 font-semibold text-gray-900 transition bg-yellow-500 rounded-r-lg sm:mt-0 sm:ml-2 hover:bg-yellow-400 whitespace-nowrap"
+                      >
+                        Subscribe
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </form>
             <p className="max-w-xs mx-auto mt-2 text-xs text-gray-500 md:mx-0">
               By subscribing, you agree to our{" "}
@@ -41,8 +72,6 @@ const Footer = () => {
               .
             </p>
           </div>
-
-          
         </div>
 
         {/* Social Media */}

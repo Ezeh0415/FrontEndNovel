@@ -33,7 +33,7 @@ const DesktopHeader = () => {
               </svg>
             )}
           </Link>
-          <div className="hidden md:block bg-black sm:fixed sm:top-[20rem] sm:ml-5 md:mt-32">
+          <div className="hidden md:block  sm:fixed sm:top-[20rem] sm:ml-5 md:ml-[-30px] md:mt-32 lg:top-[5rem]">
             <Header />
           </div>
         </div>

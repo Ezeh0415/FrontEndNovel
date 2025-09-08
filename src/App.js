@@ -16,10 +16,15 @@ import SignupPage from "./View/Auth/Signup/Signuup";
 import Login from "./View/Auth/Login/Login";
 import ProtectedRoute from "./View/Auth/Protected/ProtectedRoute";
 import { useEffect } from "react";
+import EmailVerify from "./View/Auth/Emailverify/EmailVerify";
+import EmailVerifyFunctionality from "./View/Auth/Emailverify/EmailVerifyFunctionality";
 
 function App() {
   const { handleStart, openLoader, isAuthenticated } = useMyContext();
-  const auth = isAuthenticated();
+  let auth = isAuthenticated;
+  console.log(auth)
+  
+  
 
   useEffect(() => {
     if (openLoader) {
@@ -37,7 +42,7 @@ function App() {
       {/* Show desktop header only if authenticated */}
 
       <div
-        className={`container z-10 mx-3 ml-[-2px] mb-[1rem] ${
+        className={`container z-10 mb-[1rem] ${
           auth ? "md:grid md:grid-cols-12 " : "w-full"
         }`}
       >
@@ -46,7 +51,7 @@ function App() {
             <DesktopHeader />
           </div>
         )}
-        <div className="md:col-span-10 sm:border-2">
+        <div className="md:col-span-10 sm:border-r-2 h-[100vh]">
           <Routes>
             {/* Public routes */}
             <Route
@@ -58,6 +63,13 @@ function App() {
             <Route
               path="/login"
               element={auth ? <Navigate to="/dashboard" replace /> : <Login />}
+            />
+
+            <Route
+              path="/emailVerify"
+              element={
+                auth ? <Navigate to="/dashboard" replace /> : <EmailVerify />
+              }
             />
 
             {/* Root route redirects based on auth */}

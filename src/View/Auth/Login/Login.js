@@ -5,7 +5,7 @@ import { useMyContext } from '../../../Controller/DashbordContr/GetAllFile';
 function Login() {
   const { email, password, setEmail, setPassword, btnLoading, message, handleLogin } = useMyContext();
   return (
-    <div className="flex items-center justify-center min-h-screen px-2 capitalize sm:px-4 mx-4 ml-[-5px] md:ml-[15%] lg:ml-0">
+    <div className="flex items-center justify-center min-h-screen px-2 capitalize sm:px-4 mx-4  md:ml-[15%] lg:ml-0">
       <div className="w-full max-w-md md: p-8 bg-gray-900 border border-gray-700 shadow-2xl rounded-xl">
         <h2 className="mb-6 text-3xl font-bold text-center text-white ">welcome back</h2>
           <div className="max-w-md px-4 py-3 mx-auto my-4 text-red-100 rounded-md shadow-md bg-opacity-80">

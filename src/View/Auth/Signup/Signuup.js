@@ -10,14 +10,14 @@ function SignupPage() {
     password,
     message,
     handleSubmit,
-    setfirstName,
-    setlastName,
+    setFirstName,
+    setLastName,
     setEmail,
     setPassword,
     btnLoading
   } = useMyContext();
   return (
-    <div className="flex items-center justify-center min-h-screen px-2 capitalize sm:px-4 mx-4 ml-[-5px] md:ml-[15%] lg:ml-0">
+    <div className="flex items-center justify-center min-h-screen px-2 capitalize sm:px-4 mx-4  md:ml-[15%] lg:ml-0">
       <div className="w-full max-w-md p-4 bg-gray-900 border border-gray-700 shadow-2xl sm:p-8 rounded-xl">
         <h2 className="mb-6 text-3xl font-bold text-center text-white">
           Create Account
@@ -32,34 +32,34 @@ function SignupPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
-              htmlFor="username"
+              htmlFor="FirstName"
               className="block mb-1 text-sm font-medium text-gray-300"
             >
               FirstName
             </label>
             <input
               type="text"
-              id="username"
-              placeholder="Your username"
+              id="FirstName"
+              placeholder="Your FirstName"
               value={firstName}
-              onChange={(e) => setfirstName(e.target.value)}
+              onChange={(e) => setFirstName(e.target.value)}
               className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
           <div>
             <label
-              htmlFor="username"
+              htmlFor="LastName"
               className="block mb-1 text-sm font-medium text-gray-300"
             >
               LastName
             </label>
             <input
               type="text"
-              id="username"
-              placeholder="Your username"
+              id="LastName"
+              placeholder="Your LastName"
               value={lastName}
-              onChange={(e) => setlastName(e.target.value)}
+              onChange={(e) => setLastName(e.target.value)}
               className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

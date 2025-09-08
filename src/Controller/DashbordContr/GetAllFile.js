@@ -27,11 +27,13 @@ const Base_Url = "https://backendnovel-production.up.railway.app/";
 // Provider Component
 export const MyProvider = ({ children }) => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState();
   const Users = localStorage.getItem("user");
+  console.log(JSON.parse(Users));
 
   // ------------------------ Loader ------------------------
   const [openLoader, setOpenLoader] = useState(true);
-  const handleStart = () => setTimeout(() => setOpenLoader(false), 8000);
+  const handleStart = () => setTimeout(() => setOpenLoader(false), 4000);
 
   // ------------------------ Fetch All Novels ------------------------
   const { Novel, loading, error } = GetAllNovel(`${Base_Url}books`);
@@ -187,7 +189,7 @@ export const MyProvider = ({ children }) => {
         setEmail("");
         setPassword("");
 
-        setTimeout(() => navigate("/dashboard"), 1000);
+        setTimeout(() => navigate("/emailVerify"), 1000);
       } else {
         setMessage(result?.errorMessage || "Signup failed.");
       }
@@ -226,10 +228,19 @@ export const MyProvider = ({ children }) => {
         setMessage("Login successful!");
         setEmail("");
         setPassword("");
+        try {
+          const token = localStorage.getItem("jwtToken");
+          const isLoggedIn = !!token;
+          setIsAuthenticated(isLoggedIn);
+        } catch (error) {
+          console.error("Error reading from localStorage:", error);
+          setIsAuthenticated(false); // fallback
+        }
 
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
         setMessage(result?.errorMessage || "Login failed.");
+        setTimeout(() => navigate("/signup"), 1000);
       }
     } catch {
       setMessage("Unexpected error. Please try again.");
@@ -239,16 +250,20 @@ export const MyProvider = ({ children }) => {
     }
   };
 
-  const isAuthenticated = () => !!localStorage.getItem("jwtToken");
+  // const isAuthenticated = () => !!localStorage.getItem("jwtToken");
 
   const [model, setModel] = useState(false);
+
+  // const [logoutMessage, setLogoutMessage] = useState("");
+  // const [logoutMessage2, setLogoutMessage2] = useState("");
+
   const Logout = async () => {
     try {
       localStorage.removeItem("jwtToken");
       localStorage.removeItem("user");
       setModel(false);
       await HandleLogout(`${Base_Url}logout`);
-      navigate("/login");
+      window.location.href = "/login"
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -422,6 +437,7 @@ export const MyProvider = ({ children }) => {
 
         // Auth States
         isAuthenticated,
+        setIsAuthenticated,
         firstName,
         lastName,
         email,

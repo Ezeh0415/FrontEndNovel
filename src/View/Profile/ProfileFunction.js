@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { getProfileImg, updateProfileImg } from "../../Model/postdb";
+import { getProfileImg, updateProfileImg, UserDelete } from "../../Model/postdb";
+import { useNavigate } from "react-router-dom";
 
 // Custom hook to handle file input logic
 export default function useFileInput() {
@@ -9,13 +10,16 @@ export default function useFileInput() {
   const [ProfileError, setProfileError] = useState(false);
   const [profileMessage, setProfileMessage] = useState("");
   const [profileStyle, setProfileStyle] = useState("");
+  const [selectModel, setSelectModel] = useState(false);
   const fileInputRef = useRef(null);
 
   let email;
+  let userId;
 
   const userProfile = localStorage.getItem("user");
   const user = JSON.parse(userProfile);
   email = user?.email || "";
+  userId = user?.id || "";
 
   const handleSvgClick = () => {
     fileInputRef.current.click();
@@ -78,6 +82,46 @@ export default function useFileInput() {
     setProfileError(false);
   }, 4000);
 
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleDeleteUser = async () => {
+
+   
+
+    setDeleteLoading(true);
+    try {
+      const result = await UserDelete(userId,email); // or pass email if that's what your API expects
+
+      if (result?.ok) {
+        setDeleteError(false);
+        setDeleteMessage("Account deleted successfully.");
+
+        // Optional: Clear localStorage and redirect
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("user");
+        setTimeout(() => {
+          window.location.href = "/signup"; // or homepage
+        }, 2000);
+      } else {
+        setDeleteError(true);
+        setDeleteMessage(result?.errorMessage || "Failed to delete account.");
+      }
+    } catch (error) {
+      setDeleteMessage("An error occurred while deleting the account.");
+      setDeleteError(true);
+    } finally {
+      setTimeout(() => {
+        setDeleteMessage("");
+        setDeleteLoading(false);
+        setDeleteError(false);
+      }, 4000);
+    }
+  };
+
   return {
     fileInputRef,
     handleSvgClick,
@@ -90,5 +134,11 @@ export default function useFileInput() {
     ProfileError,
     profileMessage,
     profileStyle,
+    setSelectModel,
+    selectModel,
+    deleteLoading,
+    deleteError,
+    deleteMessage,
+    handleDeleteUser,
   };
 }

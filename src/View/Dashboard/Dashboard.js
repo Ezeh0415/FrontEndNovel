@@ -15,7 +15,9 @@ const Dashboard = () => {
     LikedError,
     handleDeleteLike,
   } = useMyContext();
-  console.log(liked);
+
+ console.log(localStorage.getItem("lastPage"))
+  
 
   return (
     <div>
