@@ -27,9 +27,7 @@ const Base_Url = "https://backendnovel-production.up.railway.app/";
 // Provider Component
 export const MyProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState();
   const Users = localStorage.getItem("user");
-  console.log(JSON.parse(Users));
 
   // ------------------------ Loader ------------------------
   const [openLoader, setOpenLoader] = useState(true);
@@ -144,6 +142,11 @@ export const MyProvider = ({ children }) => {
     }
   };
 
+  const isAuthenticated = () => localStorage.getItem("jwtToken");
+  // const userProfile = localStorage.getItem("user");
+  // const user = JSON.parse(userProfile);
+  // console.log(user.isVerified);
+
   // ------------------------ Authentication ------------------------
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -153,6 +156,8 @@ export const MyProvider = ({ children }) => {
   const [btnLoading, setLoading] = useState(false);
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
+  const [userToken, setUserToken] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -180,7 +185,7 @@ export const MyProvider = ({ children }) => {
 
       if (result?.ok) {
         const { accessToken, user } = result.data;
-        localStorage.setItem("jwtToken", accessToken);
+
         localStorage.setItem("user", JSON.stringify(user));
 
         setMessage("Signup successful!");
@@ -189,7 +194,11 @@ export const MyProvider = ({ children }) => {
         setEmail("");
         setPassword("");
 
-        setTimeout(() => navigate("/emailVerify"), 1000);
+        setUserToken(accessToken);
+
+        setTimeout(() => {
+          navigate("/emailVerify");
+        }, 1000);
       } else {
         setMessage(result?.errorMessage || "Signup failed.");
       }
@@ -222,22 +231,16 @@ export const MyProvider = ({ children }) => {
 
       if (result?.ok) {
         const { accessToken, user } = result.data;
-        localStorage.setItem("jwtToken", accessToken);
+
         localStorage.setItem("user", JSON.stringify(user));
 
         setMessage("Login successful!");
         setEmail("");
         setPassword("");
-        try {
-          const token = localStorage.getItem("jwtToken");
-          const isLoggedIn = !!token;
-          setIsAuthenticated(isLoggedIn);
-        } catch (error) {
-          console.error("Error reading from localStorage:", error);
-          setIsAuthenticated(false); // fallback
-        }
-
-        setTimeout(() => navigate("/dashboard"), 1000);
+        localStorage.setItem("jwtToken", accessToken);
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       } else {
         setMessage(result?.errorMessage || "Login failed.");
         setTimeout(() => navigate("/signup"), 1000);
@@ -249,8 +252,13 @@ export const MyProvider = ({ children }) => {
       setTimeout(() => setMessage(""), 3000);
     }
   };
+  // useEffect(() => {
+  //   const token = localStorage.getItem("jwtToken");
+  //   const isLoggedIn = token ? !!token : ""; // fallback
+  //   console.log(isLoggedIn);
 
-  // const isAuthenticated = () => !!localStorage.getItem("jwtToken");
+  //   setIsAuthenticated(isLoggedIn);
+  // });
 
   const [model, setModel] = useState(false);
 
@@ -263,7 +271,7 @@ export const MyProvider = ({ children }) => {
       localStorage.removeItem("user");
       setModel(false);
       await HandleLogout(`${Base_Url}logout`);
-      window.location.href = "/login"
+      window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -381,6 +389,7 @@ export const MyProvider = ({ children }) => {
   //   }
   // };
 
+
   const handleSearchTitle = async (e) => {
     e.preventDefault();
 
@@ -436,8 +445,8 @@ export const MyProvider = ({ children }) => {
         handleStart,
 
         // Auth States
+        userToken,
         isAuthenticated,
-        setIsAuthenticated,
         firstName,
         lastName,
         email,

@@ -10,18 +10,8 @@ const EmailVerifyFunctionality = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
   const inputRefs = useRef([]);
-  const {isAuthenticated,setIsAuthenticated} = useMyContext();
   const navigation = useNavigate();
-  //   const checkAuth = () => {
-  //     try {
-  //       const token = localStorage.getItem("jwtToken");
-  //       const isLoggedIn = !!token;
-  //       setIsAuthenticated(isLoggedIn);
-  //     } catch (error) {
-  //       console.error("Error reading from localStorage:", error);
-  //       setIsAuthenticated(false); // fallback
-  //     }
-  //   };
+  const {userToken} = useMyContext();
 
   // Auto-focus first input on component mount
   useEffect(() => {
@@ -113,17 +103,7 @@ const EmailVerifyFunctionality = () => {
       if (response.ok) {
         setMessage({ text: "Email verified successfully!", type: "success" });
         // Redirect user after successful verification
-        
-          try {
-            const token = localStorage.getItem("jwtToken");
-            const isLoggedIn = !!token;
-            setIsAuthenticated(isLoggedIn);
-          } catch (error) {
-            console.error("Error reading from localStorage:", error);
-            setIsAuthenticated(false); // fallback
-          }
-       
-
+        localStorage.setItem("jwtToken", userToken);
         setTimeout(() => {
           navigation("/dashboard");
         }, 2000);
@@ -188,7 +168,6 @@ const EmailVerifyFunctionality = () => {
     message,
     verifyOtp,
     resendOtp,
-    isAuthenticated,
   };
 };
 

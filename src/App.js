@@ -21,8 +21,7 @@ import EmailVerifyFunctionality from "./View/Auth/Emailverify/EmailVerifyFunctio
 
 function App() {
   const { handleStart, openLoader, isAuthenticated } = useMyContext();
-  let auth = isAuthenticated;
-  console.log(auth)
+  let auth = isAuthenticated();
   
   
 

@@ -9,7 +9,9 @@ const DesktopHeader = () => {
     <div>
       <nav className=" w-[100%] flex items-center gap-[73vw]   md:flex-col md:w-[15vw]">
         <div className="p-2  w-fit  sm:h-[100vh] ">
-          <Link to="/profile">
+          <Link to="/profile"
+          onClick={localStorage.setItem("lastPage", "/profile")}
+          >
             {profileImg ? (
               <img
                 src={profileImg}

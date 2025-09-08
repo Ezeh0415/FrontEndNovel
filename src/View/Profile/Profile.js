@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useMyContext } from "../../Controller/DashbordContr/GetAllFile";
 import useFileInput from "./ProfileFunction";
 
@@ -25,6 +25,8 @@ export default function Profile() {
   const { model, setModel, Logout, likedCount, TotalReview } = useMyContext();
   const userProfile = localStorage.getItem("user");
   const user = JSON.parse(userProfile);
+  
+  
   const [logoutMessage, setLogoutMessage] = useState("");
   const [logoutMessage2, setLogoutMessage2] = useState("");
 

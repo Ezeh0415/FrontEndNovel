@@ -93,7 +93,6 @@ export default function Header() {
         <NavLink
           key={item.label}
           to={item.path}
-          onClick={localStorage.setItem("lastPage", item.path)}
           className={({ isActive }) =>
             isActive
               ? "flex flex-col items-center justify-center font-light capitalize text-yellow-500  md:flex-row md:gap-x-4"

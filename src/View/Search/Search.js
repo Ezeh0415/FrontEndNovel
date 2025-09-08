@@ -13,7 +13,6 @@ const Search = () => {
     handdleGetSingleNovel,
   } = useMyContext();
   const { data: results } = SearchResult || {};
-  console.log(results);
 
   return (
     <div>
@@ -39,11 +38,7 @@ const Search = () => {
 
           {/* Search Results */}
           {SearchLoading && <p>Loading...</p>}
-          {/* {SearchError && (
-            <div className="mx-auto w-fit">
-              <p>{SearchError}</p>
-            </div>
-          )} */}
+          
 
           <div className="space-y-6 lg:grid lg:grid-cols-2">
             {/* Example result card */}

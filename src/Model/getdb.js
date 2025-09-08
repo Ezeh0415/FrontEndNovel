@@ -26,6 +26,12 @@ export const GetAllNovel = (url) => {
 
   return { Novel, loading, error };
 };
+export const GetAllNovelPag = async (url) => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch novels");
+  const data = await res.json();
+  return data; // assume this includes { Novel: [...] }
+};
 
 // Fetch a single novel
 export const GetSingleNovel = (url) => {
