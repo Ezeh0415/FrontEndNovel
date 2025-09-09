@@ -143,9 +143,6 @@ export const MyProvider = ({ children }) => {
   };
 
   const isAuthenticated = () => localStorage.getItem("jwtToken");
-  // const userProfile = localStorage.getItem("user");
-  // const user = JSON.parse(userProfile);
-  // console.log(user.isVerified);
 
   // ------------------------ Authentication ------------------------
   const [firstName, setFirstName] = useState("");
@@ -252,18 +249,8 @@ export const MyProvider = ({ children }) => {
       setTimeout(() => setMessage(""), 3000);
     }
   };
-  // useEffect(() => {
-  //   const token = localStorage.getItem("jwtToken");
-  //   const isLoggedIn = token ? !!token : ""; // fallback
-  //   console.log(isLoggedIn);
-
-  //   setIsAuthenticated(isLoggedIn);
-  // });
 
   const [model, setModel] = useState(false);
-
-  // const [logoutMessage, setLogoutMessage] = useState("");
-  // const [logoutMessage2, setLogoutMessage2] = useState("");
 
   const Logout = async () => {
     try {
@@ -352,44 +339,6 @@ export const MyProvider = ({ children }) => {
   const [SearchError, setSearchError] = useState(true);
   const [SearchMessage, setSearchMessage] = useState("");
 
-  // Combine searchTitle and searchAuthor results into one search
-  // const search = async (query) => {
-  //   try {
-  //     const [titleResult, authorResult] = await Promise.all([
-  //       searchTitle(Search),
-  //       searchAuthor(Search)
-  //     ]);
-
-  //     const success = titleResult?.ok || authorResult?.ok;
-
-  //     if (!success) {
-  //       return {
-  //         ok: false,
-  //         errorMessage:
-  //           titleResult?.errorMessage ||
-  //           authorResult?.errorMessage ||
-  //           "No results found.",
-  //       };
-  //     }
-
-  //     return {
-  //       ok: true,
-  //       data: [
-  //         ...(titleResult?.data || []),
-  //         ...(authorResult?.data || [])
-  //       ],
-  //     };
-
-  //   } catch (error) {
-  //     console.error("Search error:", error);
-  //     return {
-  //       ok: false,
-  //       errorMessage: "An unexpected error occurred during search.",
-  //     };
-  //   }
-  // };
-
-
   const handleSearchTitle = async (e) => {
     e.preventDefault();
 
@@ -408,6 +357,7 @@ export const MyProvider = ({ children }) => {
       if (result?.ok) {
         setSearchLoading(false);
         setSearchResult(result.data);
+        setSearch("");
         setSearchError(false);
         // Optionally refresh liked novels or UI here
       } else {

@@ -16,9 +16,6 @@ const Dashboard = () => {
     handleDeleteLike,
   } = useMyContext();
 
- 
-  
-
   return (
     <div>
       <div className="mb-[2rem] md:mb-0 mx-2">
@@ -177,7 +174,7 @@ const Dashboard = () => {
                   </Link> */}
                   </div>
                   {Array.isArray(liked) && liked.length > 0 ? (
-                    <div className="flex items-center scrollbar w-full gap-8 mt-4 overflow-x-scroll scrollbar-hide">
+                    <div className="flex items-center w-full gap-8 mt-4 overflow-x-scroll scrollbar scrollbar-hide">
                       {liked.map((liked) => (
                         <div
                           key={liked.id}
@@ -270,7 +267,7 @@ const Dashboard = () => {
             ) : (
               <div>
                 {Novel && Novel.length > 0 ? (
-                  <div className="flex items-center w-full scrollbar gap-8 mt-4 overflow-x-scroll scrollbar-hide">
+                  <div className="flex items-center w-full gap-8 mt-4 overflow-x-scroll scrollbar scrollbar-hide">
                     {Novel.slice(1, 7).map((singleNovel) => (
                       <div
                         key={singleNovel._id}

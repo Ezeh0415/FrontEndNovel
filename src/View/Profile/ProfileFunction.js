@@ -1,6 +1,11 @@
 import { useState, useRef } from "react";
-import { getProfileImg, updateProfileImg, UserDelete } from "../../Model/postdb";
+import {
+  getProfileImg,
+  updateProfileImg,
+  UserDelete,
+} from "../../Model/postdb";
 import { useNavigate } from "react-router-dom";
+import imageCompression from "browser-image-compression";
 
 // Custom hook to handle file input logic
 export default function useFileInput() {
@@ -25,21 +30,55 @@ export default function useFileInput() {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImageUrl(reader.result); // store base64 string in state
-        };
-        reader.readAsDataURL(file);
-        setProfileImgModel(true);
-      } else {
-        alert("Invalid file type. Please select an image.");
-      }
-    }
-  };
+const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  const maxSize = 10 * 1024 * 1024; // 10MB
+
+  if (!file) {
+    setProfileError(true);
+    setProfileMessage("No file detected");
+    return;
+  }
+
+  if (file.size > maxSize) {
+    setProfileError(true);
+    setProfileMessage("File is too large. Please select a file smaller than 10MB.");
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    setProfileError(true);
+    setProfileMessage("Invalid file type. Please select an image.");
+    return;
+  }
+
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 3, // better than using maxSize in bytes
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageUrl(reader.result); // store base64 string in state
+    };
+    reader.onerror = () => {
+      setProfileError(true);
+      setProfileMessage("Error reading file");
+    };
+    reader.readAsDataURL(compressedFile);
+
+    setProfileError(false);
+    setProfileImgModel(true);
+  } catch (error) {
+    console.error(error);
+    setProfileError(true);
+    setProfileMessage("Error compressing image");
+  }
+};
+
+
   const onCancel = () => {
     setImageUrl(null);
     setProfileImgModel(false);
@@ -89,12 +128,9 @@ export default function useFileInput() {
   const navigate = useNavigate();
 
   const handleDeleteUser = async () => {
-
-   
-
     setDeleteLoading(true);
     try {
-      const result = await UserDelete(userId,email); // or pass email if that's what your API expects
+      const result = await UserDelete(userId, email); // or pass email if that's what your API expects
 
       if (result?.ok) {
         setDeleteError(false);
